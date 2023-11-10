@@ -1,0 +1,69 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Property {
+  id          Int       @id @default(autoincrement())
+  images      String[]
+  operation   Operation
+  subtype     Subtype
+  rooms       Int
+  bathrooms   Int
+  price       Int
+  address     String
+  description String
+  commission  Int
+  area        Int?
+  washing     Washing?
+  parking     Parking?
+  aircon      Aircon?
+  heating     Heating?
+  createdAt   DateTime  @default(now())
+}
+
+enum Subtype {
+  HOUSE
+  APARTMENT
+  LAND
+}
+
+enum Operation {
+  SALE
+  RENT
+  TRANSFER
+}
+
+enum Washing {
+  UNIT
+  BUILDING
+  AVAILABLE
+  NONE
+}
+
+enum Parking {
+  COVERED
+  PUBLIC
+  PRIVATE
+  AVAILABLE
+  NONE
+}
+
+enum Aircon {
+  CENTRAL
+  AVAILABLE
+  NONE
+}
+
+enum Heating {
+  CENTRAL
+  ELECTRIC
+  GAS
+  RADIATORS
+  AVAILABLE
+  NONE
+}
