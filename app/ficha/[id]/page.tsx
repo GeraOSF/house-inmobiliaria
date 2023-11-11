@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { db } from "@/lib/prisma";
 
-import PDF_Viewer from "@/components/pdf-viewer";
+import PDFViewer from "@/components/pdf-viewer";
 import Datasheet from "@/components/datasheet";
 
 export default async function DatasheetPage({
@@ -19,9 +19,9 @@ export default async function DatasheetPage({
   if (!property) redirect("/404");
 
   return (
-    <PDF_Viewer
+    <PDFViewer
       datasheet={<Datasheet property={property} />}
-      className="h-screen w-full"
+      className="h-[calc(100vh_-_3.5rem)] w-full"
     />
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { Property, Subtype, Operation } from "@prisma/client";
-import { MoreVertical, FileText, Clipboard } from "lucide-react";
+import { MoreVertical, FileText, Clipboard, CopyCheck } from "lucide-react";
 import { ColumnDef } from "@tanstack/react-table";
 
 import { Button } from "@/components/ui/button";
@@ -13,6 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useToast } from "@/components/ui/use-toast";
 
 const translations: Record<Subtype | Operation, string> = {
   HOUSE: "Casa",
@@ -86,35 +87,48 @@ export const columns: ColumnDef<Property>[] = [
     id: "actions",
     cell: ({ row }) => {
       const property = row.original;
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreVertical className="h-6 w-6" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Menú</DropdownMenuLabel>
-            <Link href={`/ficha/${property.id}`}>
-              <DropdownMenuItem className="gap-1">
-                <FileText />
-                Ver ficha técnica
+      const Menu = () => {
+        const { toast } = useToast();
+
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Abrir menu</span>
+                <MoreVertical className="h-6 w-6" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Menú</DropdownMenuLabel>
+              <DropdownMenuItem className="gap-1" asChild>
+                <Link href={`/ficha/${property.id}`}>
+                  <FileText />
+                  Ver ficha técnica
+                </Link>
               </DropdownMenuItem>
-            </Link>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() =>
-                navigator.clipboard.writeText(property.id.toString())
-              }
-              className="gap-1"
-            >
-              <Clipboard />
-              Copiar ID
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={() => {
+                  navigator.clipboard.writeText(property.id.toString());
+                  toast({
+                    description: (
+                      <div className="flex items-center gap-2">
+                        <CopyCheck />
+                        Id {property.id} copiada
+                      </div>
+                    ),
+                  });
+                }}
+                className="gap-1"
+              >
+                <Clipboard />
+                Copiar ID
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
+      };
+      return <Menu />;
     },
   },
 ];

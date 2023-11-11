@@ -1,12 +1,19 @@
 "use client";
-import { PDFViewer } from "@react-pdf/renderer";
+import { useState, useEffect } from "react";
+import { PDFViewer as PDF_Viewer } from "@react-pdf/renderer";
 
-export default function PDF_Viewer({
+export default function PDFViewer({
   datasheet,
   className,
 }: {
-  datasheet: any;
+  datasheet: JSX.Element;
   className?: string;
 }) {
-  return <PDFViewer className={className}>{datasheet}</PDFViewer>;
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
+
+  if (!mounted) return null;
+
+  return <PDF_Viewer className={className}>{datasheet}</PDF_Viewer>;
 }

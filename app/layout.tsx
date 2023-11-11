@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+import { Home } from "lucide-react";
 import { Inter } from "next/font/google";
 
 import { ThemeProvider } from "@/components/theme-provider";
-import Header from "@/components/header";
+import { ThemeSwitcher } from "@/components/theme-switcher";
+import { Toaster } from "@/components/ui/toaster";
+import { Button } from "@/components/ui/button";
 
 import "./globals.css";
 
@@ -22,8 +26,16 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <Header />
+          <header className="container flex p-2">
+            <Link href="/">
+              <Button className="p-2" variant="outline">
+                <Home />
+              </Button>
+            </Link>
+            <ThemeSwitcher className="ml-auto" />
+          </header>
           {children}
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>
