@@ -1,10 +1,14 @@
 "use client";
 import { useState } from "react";
+import Link from "next/link";
+import { Plus } from "lucide-react";
 import {
   ColumnDef,
+  ColumnFiltersState,
   SortingState,
   flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
   useReactTable,
   getPaginationRowModel,
   getSortedRowModel,
@@ -18,6 +22,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -31,6 +36,7 @@ export default function DataTable<TData, TValue>({
   data,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
   const table = useReactTable({
     data,
@@ -39,13 +45,32 @@ export default function DataTable<TData, TValue>({
     getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
+    onColumnFiltersChange: setColumnFilters,
+    getFilteredRowModel: getFilteredRowModel(),
     state: {
       sorting,
+      columnFilters,
     },
   });
 
   return (
     <div>
+      <div className="flex items-center justify-between py-4">
+        <Input
+          placeholder="Filtrar por dirección..."
+          value={(table.getColumn("address")?.getFilterValue() as string) ?? ""}
+          onChange={(event) =>
+            table.getColumn("address")?.setFilterValue(event.target.value)
+          }
+          className="max-w-sm text-base"
+        />
+        <Button className="w-fit self-start" asChild>
+          <Link href="/agregar">
+            <Plus className="h-7 w-7" />
+            <span className="text-base font-semibold">Agregar</span>
+          </Link>
+        </Button>
+      </div>
       <div className="rounded-md border">
         <Table className="text-base">
           <TableHeader>
