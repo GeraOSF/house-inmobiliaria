@@ -1,8 +1,14 @@
 "use client";
 import Link from "next/link";
 import { Property, Subtype, Operation } from "@prisma/client";
-import { MoreVertical, FileText, Clipboard, CopyCheck } from "lucide-react";
-import { ColumnDef } from "@tanstack/react-table";
+import {
+  MoreVertical,
+  FileText,
+  Clipboard,
+  CopyCheck,
+  ArrowUpDown,
+} from "lucide-react";
+import { ColumnDef, Column } from "@tanstack/react-table";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -27,7 +33,7 @@ const translations: Record<Subtype | Operation, string> = {
 export const columns: ColumnDef<Property>[] = [
   {
     accessorKey: "id",
-    header: "Id",
+    header: ({ column }) => <SortButton column={column}>Id</SortButton>,
   },
   {
     accessorKey: "address",
@@ -35,12 +41,12 @@ export const columns: ColumnDef<Property>[] = [
   },
   {
     accessorKey: "commission",
-    header: "Comisión",
+    header: ({ column }) => <SortButton column={column}>Comisión</SortButton>,
     cell: ({ row }) => <div>{row.getValue("commission")}%</div>,
   },
   {
     accessorKey: "subtype",
-    header: "Subtipo",
+    header: ({ column }) => <SortButton column={column}>Subtipo</SortButton>,
     cell: ({ row }) => {
       const subtype: Subtype = row.getValue("subtype");
       return <div>{translations[subtype]}</div>;
@@ -48,7 +54,7 @@ export const columns: ColumnDef<Property>[] = [
   },
   {
     accessorKey: "operation",
-    header: "Operación",
+    header: ({ column }) => <SortButton column={column}>Operación</SortButton>,
     cell: ({ row }) => {
       const operation: Operation = row.getValue("operation");
       return <div>{translations[operation]}</div>;
@@ -72,7 +78,9 @@ export const columns: ColumnDef<Property>[] = [
   },
   {
     accessorKey: "price",
-    header: "Precio (MXN)",
+    header: ({ column }) => (
+      <SortButton column={column}>Precio (MXN)</SortButton>
+    ),
     cell: ({ row }) => {
       const price = parseInt(row.getValue("price"));
       const formatted = new Intl.NumberFormat("es-MX", {
@@ -89,7 +97,6 @@ export const columns: ColumnDef<Property>[] = [
       const property = row.original;
       const Menu = () => {
         const { toast } = useToast();
-
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -132,3 +139,22 @@ export const columns: ColumnDef<Property>[] = [
     },
   },
 ];
+
+function SortButton({
+  column,
+  children,
+}: {
+  column: Column<Property>;
+  children: React.ReactNode;
+}) {
+  return (
+    <Button
+      variant="ghost"
+      onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      className="flex gap-2 whitespace-nowrap text-base"
+    >
+      {children}
+      <ArrowUpDown className="h-4 w-4" />
+    </Button>
+  );
+}
