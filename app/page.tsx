@@ -3,7 +3,9 @@ import DataTable from "@/components/data-table";
 import { columns } from "./columns";
 
 export default async function Home() {
-  const properties = await db.property.findMany();
+  const properties = await db.property.findMany({
+    orderBy: { id: "desc" },
+  });
 
   return (
     <main className="container p-2">
