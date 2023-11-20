@@ -1,16 +1,23 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Home } from "lucide-react";
-import { Inter } from "next/font/google";
+import { Open_Sans } from "next/font/google";
+import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
+import { extractRouterConfig } from "uploadthing/server";
 
+import { ourFileRouter } from "@/app/api/uploadthing/core";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ThemeSwitcher } from "@/components/theme-switcher";
 import { Toaster } from "@/components/ui/toaster";
 import { Button } from "@/components/ui/button";
 
 import "./globals.css";
+import "@uploadthing/react/styles.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const openSans = Open_Sans({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800"],
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -24,7 +31,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
+      <body className={openSans.className}>
+        <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <header className="container flex p-2">
             <Link href="/">

@@ -12,7 +12,7 @@ model Property {
   images      String[]
   operation   Operation
   subtype     Subtype
-  rooms       Int
+  bedrooms    Int
   bathrooms   Int
   price       Int
   address     String

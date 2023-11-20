@@ -1,5 +1,5 @@
 import { db } from "@/lib/prisma";
-import DataTable from "@/components/data-table";
+import DataTable from "./data-table";
 import { columns } from "./columns";
 
 export default async function Home() {

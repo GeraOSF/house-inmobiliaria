@@ -1,7 +1,9 @@
+import AddForm from "./add-form";
+
 export default function AddPage() {
   return (
-    <main className="flex flex-row justify-center">
-      <p className="">add</p>
+    <main className="container flex flex-col items-center gap-2 p-2">
+      <AddForm />
     </main>
   );
 }

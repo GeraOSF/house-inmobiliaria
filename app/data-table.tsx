@@ -71,7 +71,7 @@ export default function DataTable<TData, TValue>({
           </Link>
         </Button>
       </div>
-      <div className="rounded-md border">
+      <div className="rounded-md border-2">
         <Table className="text-base">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
