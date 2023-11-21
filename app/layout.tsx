@@ -5,8 +5,8 @@ import { Open_Sans } from "next/font/google";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 
+import { Providers } from "@/app/providers";
 import { ourFileRouter } from "@/app/api/uploadthing/core";
-import { ThemeProvider } from "@/components/theme-provider";
 import { ThemeSwitcher } from "@/components/theme-switcher";
 import { Toaster } from "@/components/ui/toaster";
 import { Button } from "@/components/ui/button";
@@ -33,7 +33,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={openSans.className}>
         <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <Providers>
           <header className="container flex p-2">
             <Link href="/">
               <Button className="p-2" variant="outline">
@@ -44,7 +44,7 @@ export default function RootLayout({
           </header>
           {children}
           <Toaster />
-        </ThemeProvider>
+        </Providers>
       </body>
     </html>
   );

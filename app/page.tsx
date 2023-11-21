@@ -1,15 +1,23 @@
-import { db } from "@/lib/prisma";
-import DataTable from "./data-table";
-import { columns } from "./columns";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import getQueryClient from "@/lib/query";
+
+import { getProperties } from "@/app/actions";
+import { columns } from "@/app/columns";
+import DataTable from "@/app/data-table";
 
 export default async function Home() {
-  const properties = await db.property.findMany({
-    orderBy: { id: "desc" },
+  const queryClient = getQueryClient();
+  await queryClient.prefetchQuery({
+    queryKey: ["properties"],
+    queryFn: getProperties,
   });
+  const dehydratedState = dehydrate(queryClient);
 
   return (
     <main className="container p-2">
-      <DataTable columns={columns} data={properties} />
+      <HydrationBoundary state={dehydratedState}>
+        <DataTable columns={columns} />
+      </HydrationBoundary>
     </main>
   );
 }

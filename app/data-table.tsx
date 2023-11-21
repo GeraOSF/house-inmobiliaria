@@ -1,6 +1,9 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import { useSearchParams, useRouter } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
+import { Property } from "@prisma/client";
 import { Plus } from "lucide-react";
 import {
   ColumnDef,
@@ -25,21 +28,29 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { getProperties } from "@/app/actions";
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
+interface DataTableProps<TValue> {
+  columns: ColumnDef<Property, TValue>[];
 }
 
-export default function DataTable<TData, TValue>({
-  columns,
-  data,
-}: DataTableProps<TData, TValue>) {
+export default function DataTable<TValue>({ columns }: DataTableProps<TValue>) {
+  const { data, refetch } = useQuery({
+    queryKey: ["properties"],
+    queryFn: getProperties,
+  });
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
+  if (searchParams.has("added")) {
+    refetch();
+    router.push("/");
+  }
+
   const table = useReactTable({
-    data,
+    data: data ?? [],
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),

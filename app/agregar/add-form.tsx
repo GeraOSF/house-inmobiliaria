@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
-import { revalidatePath } from "next/cache";
 import { useRouter } from "next/navigation";
+import { useMutation } from "@tanstack/react-query";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -29,6 +29,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
+import { cn } from "@/lib/utils";
 
 export default function AddForm() {
   const { toast } = useToast();
@@ -48,13 +49,9 @@ export default function AddForm() {
       const urls = utResponse?.map((img) => img.url);
       await fetch("/api/property", {
         method: "POST",
-        body: JSON.stringify({
-          ...values,
-          images: urls,
-        }),
+        body: JSON.stringify({ images: urls, ...values }),
       });
-      revalidatePath("/");
-      router.push("/");
+      router.push("/?added");
     } catch (error) {
       console.error(error);
       toast({
@@ -383,8 +380,12 @@ export default function AddForm() {
             )}
           />
           <Separator />
-          <Button disabled={submitting} type="submit">
-            Agregar
+          <Button
+            className={cn({ "cursor-wait": submitting })}
+            disabled={submitting}
+            type="submit"
+          >
+            {submitting ? "Agregando..." : "Agregar"}
           </Button>
         </form>
       </Form>
