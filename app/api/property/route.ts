@@ -16,3 +16,9 @@ export async function POST(req: NextRequest) {
 
   return NextResponse.json({ message: "Property created" });
 }
+
+export async function DELETE(req: NextRequest) {
+  const { id } = await req.json();
+  await db.property.delete({ where: { id } });
+  return NextResponse.json({ message: "Property deleted" });
+}

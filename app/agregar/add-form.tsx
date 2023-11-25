@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useMutation } from "@tanstack/react-query";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -31,7 +30,11 @@ import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 
-export default function AddForm() {
+export default function AddForm({
+  revalidate,
+}: {
+  revalidate: (path: string) => void;
+}) {
   const { toast } = useToast();
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
@@ -51,7 +54,8 @@ export default function AddForm() {
         method: "POST",
         body: JSON.stringify({ images: urls, ...values }),
       });
-      router.push("/?added");
+      revalidate("/");
+      router.push("/");
     } catch (error) {
       console.error(error);
       toast({
@@ -60,6 +64,7 @@ export default function AddForm() {
           "Ocurrió un error al agregar la propiedad, intente de nuevo.",
         variant: "destructive",
       });
+    } finally {
       setSubmitting(false);
     }
   }

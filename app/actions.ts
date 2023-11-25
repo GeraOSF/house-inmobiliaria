@@ -5,3 +5,10 @@ export async function getProperties() {
     orderBy: { id: "desc" },
   });
 }
+
+export async function deleteProperty(id: number) {
+  return await fetch("/api/property", {
+    method: "DELETE",
+    body: JSON.stringify({ id }),
+  });
+}

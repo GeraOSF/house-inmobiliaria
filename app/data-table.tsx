@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-import { useSearchParams, useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { Property } from "@prisma/client";
 import { Plus } from "lucide-react";
@@ -35,19 +34,12 @@ interface DataTableProps<TValue> {
 }
 
 export default function DataTable<TValue>({ columns }: DataTableProps<TValue>) {
-  const { data, refetch } = useQuery({
+  const { data } = useQuery({
     queryKey: ["properties"],
     queryFn: getProperties,
   });
-  const router = useRouter();
-  const searchParams = useSearchParams();
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-
-  if (searchParams.has("added")) {
-    refetch();
-    router.push("/");
-  }
 
   const table = useReactTable({
     data: data ?? [],

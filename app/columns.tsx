@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Property, Subtype, Operation } from "@prisma/client";
 import {
   MoreVertical,
@@ -7,9 +8,12 @@ import {
   Clipboard,
   CopyCheck,
   ArrowUpDown,
+  Trash,
 } from "lucide-react";
 import { ColumnDef, Column } from "@tanstack/react-table";
 
+import { deleteProperty } from "@/app/actions";
+import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -96,7 +100,12 @@ export const columns: ColumnDef<Property>[] = [
     cell: ({ row }) => {
       const property = row.original;
       const Menu = () => {
+        const router = useRouter();
         const { toast } = useToast();
+        const { mutateAsync } = useMutation({
+          mutationFn: deleteProperty,
+          onSuccess: router.refresh,
+        });
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -113,7 +122,6 @@ export const columns: ColumnDef<Property>[] = [
                   Ver ficha técnica
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={() => {
                   navigator.clipboard.writeText(property.id.toString());
@@ -130,6 +138,24 @@ export const columns: ColumnDef<Property>[] = [
               >
                 <Clipboard />
                 Copiar ID
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={async () => {
+                  await mutateAsync(property.id);
+                  toast({
+                    description: (
+                      <div className="flex items-center gap-2">
+                        <Trash />
+                        Propiedad con id {property.id} eliminada.
+                      </div>
+                    ),
+                  });
+                }}
+                className="gap-1"
+              >
+                <Trash />
+                Eliminar propiedad
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
