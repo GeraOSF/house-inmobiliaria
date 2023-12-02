@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { CircleDashed } from "lucide-react";
 
 import { useUploadThing } from "@/lib/uploadthing";
 import { formSchema } from "@/app/validations";
@@ -386,11 +387,19 @@ export default function AddForm({
           />
           <Separator />
           <Button
-            className={cn({ "cursor-wait": submitting })}
+            className={cn("gap-1", {
+              "cursor-wait": submitting,
+            })}
             disabled={submitting}
             type="submit"
           >
-            {submitting ? "Agregando..." : "Agregar"}
+            {submitting ? (
+              <>
+                Agregando <CircleDashed className="animate-spin" />
+              </>
+            ) : (
+              "Agregar"
+            )}
           </Button>
         </form>
       </Form>
