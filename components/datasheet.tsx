@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/alt-text */
+// ^Added this because react-pdf Image component doesn't support alt prop
 import { Property } from "@prisma/client";
 import {
   Document,
@@ -6,25 +8,250 @@ import {
   View,
   Text,
   Image,
+  Svg,
+  Circle,
 } from "@react-pdf/renderer";
+
+import { translations } from "@/lib/constants";
 
 const styles = StyleSheet.create({
   page: {
+    display: "flex",
     flexDirection: "column",
-  },
-  section: {
-    margin: 10,
+    gap: 8,
     padding: 10,
-    flexGrow: 1,
+    fontFamily: "Helvetica",
+    fontSize: 12,
   },
 });
 
 export default function Datasheet({ property }: { property: Property }) {
+  const price = new Intl.NumberFormat("es-MX", {
+    style: "currency",
+    currency: "MXN",
+    maximumFractionDigits: 0,
+  }).format(property.price);
+
+  // extra mock images
+  property.images.push(
+    "https://www.rocketmortgage.com/resources-cmsassets/RocketMortgage.com/Article_Images/Large_Images/Stock-Modern-House-With-Large-Pool-AdobeStock-127770833-Copy.jpg",
+    "https://www.mydomaine.com/thmb/LWInT5efjnKDq_YgJGc6-Y0aTz0=/2121x0/filters:no_upscale():strip_icc()/GettyImages-78778405-b6ae008ac1174f079ec9015a72cd7ed2.jpg",
+    "https://a0.muscache.com/im/pictures/miso/Hosting-656529201420530692/original/7c87f183-9eba-498c-8862-6419d5c21209.jpeg?im_w=720",
+    "https://thumbor.forbes.com/thumbor/fit-in/900x510/https://www.forbes.com/advisor/wp-content/uploads/2022/10/condo-vs-apartment.jpeg.jpg",
+    "https://assets.marketapts.com/assets/converted/TRLHOL/images/apartments/photos/ddbixd6yrmdhv02cueh2yhh1tjdbnjin.jpg.800x600.jpg",
+  );
+
   return (
-    <Document>
-      <Page size="A4" style={styles.page}>
+    <Document title={`Propiedad ${property.id}`}>
+      <Page style={styles.page}>
+        <Text style={{ textAlign: "right", fontSize: 10 }}>
+          ID: {property.id}
+        </Text>
+        <View
+          style={{
+            backgroundColor: "#e6e7e8",
+          }}
+        >
+          <Image
+            style={{ width: "40%", margin: "0 auto" }}
+            src={property.images[0]}
+          />
+        </View>
+        <Text
+          style={{
+            fontFamily: "Helvetica-Bold",
+            color: "hsl(142.1, 76.2%, 36.3%)",
+            fontSize: 14,
+          }}
+        >
+          {translations[property.subtype]} en {translations[property.operation]}
+        </Text>
         <Text>{property.address}</Text>
+        <Separator />
+        <Text style={{ fontSize: 14, fontFamily: "Helvetica-Bold" }}>
+          {translations[property.operation]}: {price} MXN
+        </Text>
+        <Separator />
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            flexWrap: "wrap",
+          }}
+        >
+          <Text style={{ width: "50%" }}>
+            <Text style={{ fontFamily: "Helvetica-Bold" }}>
+              Tipo de propiedad:
+            </Text>{" "}
+            {translations[property.subtype]}
+          </Text>
+          <Text style={{ width: "50%" }}>
+            <Text style={{ fontFamily: "Helvetica-Bold" }}>
+              Tipo de operación:
+            </Text>{" "}
+            {translations[property.operation]}
+          </Text>
+        </View>
+        <Separator />
+        <List>
+          <Item decorated>
+            <Text>
+              <Text style={{ fontFamily: "Helvetica-Bold" }}>Recámaras:</Text>{" "}
+              {property.bedrooms}
+            </Text>
+          </Item>
+          <Item decorated>
+            <Text>
+              <Text style={{ fontFamily: "Helvetica-Bold" }}>Baños:</Text>{" "}
+              {property.bathrooms}
+            </Text>
+          </Item>
+          {property.area != null && (
+            <Item decorated>
+              <Text>
+                <Text style={{ fontFamily: "Helvetica-Bold" }}>Área:</Text>{" "}
+                {property.area} m²
+              </Text>
+            </Item>
+          )}
+          {property.parking != null && (
+            <Item decorated>
+              <Text>
+                <Text style={{ fontFamily: "Helvetica-Bold" }}>
+                  Estacionamiento:
+                </Text>{" "}
+                {translations[property.parking]}
+              </Text>
+            </Item>
+          )}
+          {property.washing != null && (
+            <Item decorated>
+              <Text>
+                <Text style={{ fontFamily: "Helvetica-Bold" }}>Lavadora:</Text>{" "}
+                {translations[property.washing]}
+              </Text>
+            </Item>
+          )}
+          {property.aircon != null && (
+            <Item decorated>
+              <Text>
+                <Text style={{ fontFamily: "Helvetica-Bold" }}>
+                  Aire acondicionado:
+                </Text>{" "}
+                {translations[property.aircon]}
+              </Text>
+            </Item>
+          )}
+          {property.heating != null && (
+            <Item decorated>
+              <Text>
+                <Text style={{ fontFamily: "Helvetica-Bold" }}>
+                  Calefacción:
+                </Text>{" "}
+                {translations[property.heating]}
+              </Text>
+            </Item>
+          )}
+        </List>
+        <Separator />
+        <Text style={{ fontFamily: "Helvetica-Bold" }}>Descripción:</Text>
+        <Text>{property.description}</Text>
+        <Separator />
+        <Text style={{ fontFamily: "Helvetica-Bold" }}>Referencias:</Text>
+        {/* Here goes the map from google maps */}
+        <Text>Aquí va el mapa de Google Maps</Text>
+      </Page>
+      <Page style={styles.page}>
+        <Text style={{ fontFamily: "Helvetica-Bold" }}>Catálogo de fotos:</Text>
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            flexWrap: "wrap",
+            justifyContent: "center",
+            gap: 4,
+          }}
+        >
+          {property.images.map((image, index) => (
+            <Image
+              style={{ width: "49%", objectFit: "contain" }}
+              src={image}
+              key={index}
+            />
+          ))}
+        </View>
+        <View>
+          <Text style={{ fontSize: 8, textAlign: "center" }}>
+            Propiedad sujeta a disponibilidad.
+          </Text>
+          <Text style={{ fontSize: 8, textAlign: "center" }}>
+            Precio sujeto a cambios sin previo aviso.
+          </Text>
+          <Text style={{ fontSize: 8, textAlign: "center" }}>
+            El envío de esta ficha no compromete a las partes a la suscripción
+            de ningún documento legal.
+          </Text>
+          <Text style={{ fontSize: 8, textAlign: "center" }}>
+            La información y medidas son aproximadas y deberán ratificarse con
+            la documentación pertinente.
+          </Text>
+        </View>
       </Page>
     </Document>
+  );
+}
+
+function List({ children }: { children: React.ReactNode }) {
+  return (
+    <View
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        flexWrap: "wrap",
+        width: "100%",
+        lineHeight: 1.5,
+      }}
+    >
+      {children}
+    </View>
+  );
+}
+
+function Item({
+  children,
+  decorated,
+}: {
+  children: React.ReactNode;
+  decorated?: boolean;
+}) {
+  return (
+    <View
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 4,
+        width: "50%",
+      }}
+    >
+      {decorated && (
+        <Svg width={2} height={2}>
+          <Circle cx="1" cy="1" r="2" fill="#000" />
+        </Svg>
+      )}
+      {children}
+    </View>
+  );
+}
+
+function Separator() {
+  return (
+    <View
+      style={{
+        width: "100%",
+        height: 2,
+        backgroundColor: "#e6e7e8",
+      }}
+    />
   );
 }

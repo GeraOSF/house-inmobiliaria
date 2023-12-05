@@ -24,15 +24,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/components/ui/use-toast";
-
-const translations: Record<Subtype | Operation, string> = {
-  HOUSE: "Casa",
-  APARTMENT: "Departamento",
-  LAND: "Terreno",
-  SALE: "Venta",
-  RENT: "Renta",
-  TRANSFER: "Traspaso",
-};
+import { translations } from "@/lib/constants";
 
 export const columns: ColumnDef<Property>[] = [
   {
