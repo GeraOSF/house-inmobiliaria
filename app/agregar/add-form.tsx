@@ -53,7 +53,7 @@ export default function AddForm({
     // isPlacePredictionsLoading,
   } = usePlacesService({
     apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
-    debounce: 400,
+    debounce: 500,
     options: {
       componentRestrictions: {
         country: "mx",
