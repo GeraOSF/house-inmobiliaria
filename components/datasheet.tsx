@@ -25,6 +25,8 @@ const styles = StyleSheet.create({
   },
 });
 
+const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+
 export default function Datasheet({ property }: { property: Property }) {
   const price = new Intl.NumberFormat("es-MX", {
     style: "currency",
@@ -149,8 +151,10 @@ export default function Datasheet({ property }: { property: Property }) {
         <Text>{property.description}</Text>
         <Separator />
         <Text style={{ fontFamily: "Helvetica-Bold" }}>Referencias:</Text>
-        {/* Here goes the map from google maps */}
-        <Text>Aquí va el mapa de Google Maps</Text>
+        <Image
+          src={`https://maps.googleapis.com/maps/api/staticmap?center=36.409233,139.757612&zoom=15&size=600x300&markers=color:red%7C36.409233,139.757612&key=${API_KEY}`}
+          style={{ width: "80%", margin: "0 auto" }}
+        />
       </Page>
       <Page style={styles.page}>
         <Text style={{ fontFamily: "Helvetica-Bold" }}>Catálogo de fotos:</Text>
