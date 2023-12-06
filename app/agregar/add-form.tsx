@@ -5,7 +5,9 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { CircleDashed } from "lucide-react";
+import usePlacesService from "react-google-autocomplete/lib/usePlacesAutocompleteService";
 
+import { cn } from "@/lib/utils";
 import { useUploadThing } from "@/lib/uploadthing";
 import { formSchema } from "@/app/validations";
 import MultiUploader from "@/components/multi-uploader";
@@ -29,7 +31,6 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
-import { cn } from "@/lib/utils";
 
 export default function AddForm({
   revalidate,
@@ -43,17 +44,43 @@ export default function AddForm({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
-
   const { startUpload } = useUploadThing("imageUploader");
+  const {
+    placesService,
+    placePredictions,
+    getPlacePredictions,
+    // isPlacePredictionsLoading,
+  } = usePlacesService({
+    apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
+    debounce: 500,
+    options: {
+      componentRestrictions: {
+        country: "mx",
+      },
+      fields: ["geometry.location"],
+    },
+  });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setSubmitting(true);
       const utResponse = await startUpload(files);
       const urls = utResponse?.map((img) => img.url);
+      const coordinates = { lat: 0, lng: 0 };
+      if (placePredictions.length) {
+        placesService?.getDetails(
+          {
+            placeId: placePredictions[0].place_id,
+          },
+          (place: any) => {
+            coordinates.lat = place.geometry.location.lat();
+            coordinates.lng = place.geometry.location.lng();
+          },
+        );
+      }
       await fetch("/api/property", {
         method: "POST",
-        body: JSON.stringify({ images: urls, ...values }),
+        body: JSON.stringify({ ...values, images: urls, coordinates }),
       });
       revalidate("/");
       router.push("/");
@@ -190,12 +217,28 @@ export default function AddForm({
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Input
-                    {...field}
-                    placeholder="Dirección"
-                    type="text"
-                    id={field.name}
-                  />
+                  <div>
+                    <Input
+                      {...field}
+                      placeholder="Dirección"
+                      type="text"
+                      id={field.name}
+                      list="addressList"
+                      onChange={(e) => {
+                        field.onChange(e);
+                        getPlacePredictions({ input: e.target.value });
+                      }}
+                      autoComplete="off"
+                      disabled={submitting}
+                    />
+                    <datalist className="w-full" id="addressList">
+                      {placePredictions?.map((place) => (
+                        <option key={place.place_id} value={place.description}>
+                          {place.description}
+                        </option>
+                      ))}
+                    </datalist>
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>

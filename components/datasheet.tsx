@@ -32,15 +32,6 @@ export default function Datasheet({ property }: { property: Property }) {
     maximumFractionDigits: 0,
   }).format(property.price);
 
-  // extra mock images
-  property.images.push(
-    "https://www.rocketmortgage.com/resources-cmsassets/RocketMortgage.com/Article_Images/Large_Images/Stock-Modern-House-With-Large-Pool-AdobeStock-127770833-Copy.jpg",
-    "https://www.mydomaine.com/thmb/LWInT5efjnKDq_YgJGc6-Y0aTz0=/2121x0/filters:no_upscale():strip_icc()/GettyImages-78778405-b6ae008ac1174f079ec9015a72cd7ed2.jpg",
-    "https://a0.muscache.com/im/pictures/miso/Hosting-656529201420530692/original/7c87f183-9eba-498c-8862-6419d5c21209.jpeg?im_w=720",
-    "https://thumbor.forbes.com/thumbor/fit-in/900x510/https://www.forbes.com/advisor/wp-content/uploads/2022/10/condo-vs-apartment.jpeg.jpg",
-    "https://assets.marketapts.com/assets/converted/TRLHOL/images/apartments/photos/ddbixd6yrmdhv02cueh2yhh1tjdbnjin.jpg.800x600.jpg",
-  );
-
   return (
     <Document title={`Propiedad ${property.id}`}>
       <Page style={styles.page}>

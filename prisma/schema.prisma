@@ -16,6 +16,7 @@ model Property {
   bathrooms   Int
   price       Int
   address     String
+  coordinates Json
   description String
   commission  Int
   area        Int?

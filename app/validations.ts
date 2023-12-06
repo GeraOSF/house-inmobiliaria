@@ -12,7 +12,6 @@ i18next.init({
 z.setErrorMap(zodI18nMap);
 
 export const formSchema = z.object({
-  images: z.array(z.string().url()).optional(),
   operation: z.enum(["SALE", "RENT", "TRANSFER"]),
   subtype: z.enum(["HOUSE", "APARTMENT", "LAND"]),
   bedrooms: z.number().int().nonnegative(),
@@ -30,4 +29,9 @@ export const formSchema = z.object({
   heating: z
     .enum(["CENTRAL", "ELECTRIC", "GAS", "RADIATORS", "AVAILABLE", "NONE"])
     .optional(),
+});
+
+export const propertySchema = formSchema.extend({
+  images: z.array(z.string().url()),
+  coordinates: z.object({ lat: z.number(), lng: z.number() }),
 });
