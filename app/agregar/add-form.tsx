@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -41,6 +41,7 @@ export default function AddForm({
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
+  const [coordinates, setCoordinates] = useState({ lat: 0, lng: 0 });
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
@@ -52,7 +53,7 @@ export default function AddForm({
     // isPlacePredictionsLoading,
   } = usePlacesService({
     apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
-    debounce: 500,
+    debounce: 400,
     options: {
       componentRestrictions: {
         country: "mx",
@@ -66,18 +67,6 @@ export default function AddForm({
       setSubmitting(true);
       const utResponse = await startUpload(files);
       const urls = utResponse?.map((img) => img.url);
-      const coordinates = { lat: 0, lng: 0 };
-      if (placePredictions.length) {
-        placesService?.getDetails(
-          {
-            placeId: placePredictions[0].place_id,
-          },
-          (place: any) => {
-            coordinates.lat = place.geometry.location.lat();
-            coordinates.lng = place.geometry.location.lng();
-          },
-        );
-      }
       await fetch("/api/property", {
         method: "POST",
         body: JSON.stringify({ ...values, images: urls, coordinates }),
@@ -96,6 +85,21 @@ export default function AddForm({
       setSubmitting(false);
     }
   }
+  useEffect(() => {
+    if (placePredictions.length)
+      placesService?.getDetails(
+        {
+          placeId: placePredictions[0].place_id,
+        },
+        (place: any) => {
+          setCoordinates({
+            lat: place.geometry.location.lat(),
+            lng: place.geometry.location.lng(),
+          });
+        },
+      );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [placePredictions]);
 
   return (
     <div>

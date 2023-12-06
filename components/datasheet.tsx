@@ -34,6 +34,16 @@ export default function Datasheet({ property }: { property: Property }) {
     maximumFractionDigits: 0,
   }).format(property.price);
 
+  let coordinates;
+  if (
+    typeof property.coordinates === "object" &&
+    property.coordinates != null &&
+    "lat" in property.coordinates &&
+    "lng" in property.coordinates
+  ) {
+    coordinates = `${property.coordinates.lat},${property.coordinates.lng}`;
+  }
+
   return (
     <Document title={`Propiedad ${property.id}`}>
       <Page style={styles.page}>
@@ -150,11 +160,15 @@ export default function Datasheet({ property }: { property: Property }) {
         <Text style={{ fontFamily: "Helvetica-Bold" }}>Descripción:</Text>
         <Text>{property.description}</Text>
         <Separator />
-        <Text style={{ fontFamily: "Helvetica-Bold" }}>Referencias:</Text>
-        <Image
-          src={`https://maps.googleapis.com/maps/api/staticmap?center=36.409233,139.757612&zoom=15&size=600x300&markers=color:red%7C36.409233,139.757612&key=${API_KEY}`}
-          style={{ width: "80%", margin: "0 auto" }}
-        />
+        {property.coordinates != null && (
+          <>
+            <Text style={{ fontFamily: "Helvetica-Bold" }}>Referencias:</Text>
+            <Image
+              src={`https://maps.googleapis.com/maps/api/staticmap?center=${coordinates}&zoom=15&size=600x300&markers=color:red%7C${coordinates}&key=${API_KEY}`}
+              style={{ width: "80%", margin: "0 auto" }}
+            />
+          </>
+        )}
       </Page>
       <Page style={styles.page}>
         <Text style={{ fontFamily: "Helvetica-Bold" }}>Catálogo de fotos:</Text>
