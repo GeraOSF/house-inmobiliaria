@@ -33,5 +33,6 @@ export const formSchema = z.object({
 
 export const propertySchema = formSchema.extend({
   images: z.array(z.string().url()),
+  imageKeys: z.array(z.string()),
   coordinates: z.object({ lat: z.number(), lng: z.number() }),
 });

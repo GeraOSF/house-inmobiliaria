@@ -66,10 +66,20 @@ export default function AddForm({
     try {
       setSubmitting(true);
       const utResponse = await startUpload(files);
-      const urls = utResponse?.map((img) => img.url);
+      const urls: string[] = [];
+      const keys: string[] = [];
+      for (const img of utResponse!) {
+        urls.push(img.url);
+        keys.push(img.key);
+      }
       await fetch("/api/property", {
         method: "POST",
-        body: JSON.stringify({ ...values, images: urls, coordinates }),
+        body: JSON.stringify({
+          ...values,
+          images: urls,
+          imageKeys: keys,
+          coordinates,
+        }),
       });
       revalidate("/");
       router.push("/");

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { UTApi } from "uploadthing/server";
 
 import { db } from "@/lib/prisma";
 import { propertySchema } from "@/app/validations";
@@ -19,6 +20,14 @@ export async function POST(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
   const { id } = await req.json();
+  const property = await db.property.findUnique({
+    select: { imageKeys: true },
+    where: { id },
+  });
+  if (property && property.imageKeys.length) {
+    const utapi = new UTApi();
+    await utapi.deleteFiles(property.imageKeys);
+  }
   await db.property.delete({ where: { id } });
   return NextResponse.json({ message: "Property deleted" });
 }
