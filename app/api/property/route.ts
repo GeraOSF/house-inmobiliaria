@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { UTApi } from "uploadthing/server";
 
 import { db } from "@/lib/prisma";
-import { propertySchema } from "@/app/validations";
+import { propertySchema } from "@/lib/validations";
 
 export async function POST(req: NextRequest) {
   const body = await req.json();

@@ -9,7 +9,7 @@ import usePlacesService from "react-google-autocomplete/lib/usePlacesAutocomplet
 
 import { cn } from "@/lib/utils";
 import { useUploadThing } from "@/lib/uploadthing";
-import { formSchema } from "@/app/validations";
+import { formSchema } from "@/lib/validations";
 import MultiUploader from "@/components/multi-uploader";
 import {
   Form,
