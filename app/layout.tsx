@@ -40,7 +40,7 @@ export default function RootLayout({
             <header className="container flex justify-between p-2">
               <div className="flex items-center gap-4">
                 <Link href="/">
-                  <Button className="p-2" variant="outline">
+                  <Button title="Inicio" className="p-2" variant="outline">
                     <Home />
                   </Button>
                 </Link>

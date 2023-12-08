@@ -14,7 +14,7 @@ export default function AuthButtons() {
     <div>
       <SignedIn>
         <SignOutButton>
-          <Button title="Cerrar sesión" variant="ghost">
+          <Button className="px-2" title="Cerrar sesión" variant="ghost">
             <LogOutIcon />
           </Button>
         </SignOutButton>
