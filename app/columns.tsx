@@ -45,7 +45,7 @@ export const columns: ColumnDef<Property>[] = [
       return (
         <picture>
           <img
-            className="h-40 w-40 rounded object-cover"
+            className="mx-auto h-40 w-40 rounded object-cover"
             src={images[0]}
             alt="Preview de la propiedad"
           />
@@ -88,7 +88,7 @@ function SortButton({
     <Button
       variant="ghost"
       onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      className="flex gap-2 whitespace-nowrap text-base"
+      className="mx-auto flex gap-2 whitespace-nowrap text-base"
     >
       {children}
       <ArrowUpDown className="h-4 w-4" />
