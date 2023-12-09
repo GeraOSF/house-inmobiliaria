@@ -1,30 +1,11 @@
 "use client";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { Property, Subtype, Operation } from "@prisma/client";
-import {
-  MoreVertical,
-  FileText,
-  Clipboard,
-  CopyCheck,
-  ArrowUpDown,
-  Trash,
-} from "lucide-react";
+import { ArrowUpDown } from "lucide-react";
 import { ColumnDef, Column } from "@tanstack/react-table";
 
-import { deleteProperty } from "@/app/actions";
-import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { useToast } from "@/components/ui/use-toast";
 import { translations } from "@/lib/constants";
+import TableDropDownMenu from "./table-dd-menu";
 
 export const columns: ColumnDef<Property>[] = [
   {
@@ -91,69 +72,7 @@ export const columns: ColumnDef<Property>[] = [
     id: "actions",
     cell: ({ row }) => {
       const property = row.original;
-      const Menu = () => {
-        const router = useRouter();
-        const { toast } = useToast();
-        const { mutateAsync } = useMutation({
-          mutationFn: deleteProperty,
-          onSuccess: router.refresh,
-        });
-        return (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Abrir menu</span>
-                <MoreVertical className="h-6 w-6" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Menú</DropdownMenuLabel>
-              <DropdownMenuItem className="gap-1" asChild>
-                <Link href={`/ficha/${property.id}`}>
-                  <FileText />
-                  Ver ficha técnica
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => {
-                  navigator.clipboard.writeText(property.id.toString());
-                  toast({
-                    description: (
-                      <div className="flex items-center gap-2">
-                        <CopyCheck />
-                        Id {property.id} copiada
-                      </div>
-                    ),
-                  });
-                }}
-                className="gap-1"
-              >
-                <Clipboard />
-                Copiar ID
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={async () => {
-                  await mutateAsync(property.id);
-                  toast({
-                    description: (
-                      <div className="flex items-center gap-2">
-                        <Trash />
-                        Propiedad con id {property.id} eliminada.
-                      </div>
-                    ),
-                  });
-                }}
-                className="gap-1"
-              >
-                <Trash />
-                Eliminar propiedad
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        );
-      };
-      return <Menu />;
+      return <TableDropDownMenu property={property} />;
     },
   },
 ];

@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, createContext } from "react";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { Property } from "@prisma/client";
@@ -29,11 +29,14 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { getProperties } from "@/app/actions";
 
-interface DataTableProps<TValue> {
+export const IsAdminContext = createContext(false);
+
+interface Props<TValue> {
   columns: ColumnDef<Property, TValue>[];
+  isAdmin: boolean;
 }
 
-export default function DataTable<TValue>({ columns }: DataTableProps<TValue>) {
+export default function DataTable<TValue>({ columns, isAdmin }: Props<TValue>) {
   const { data } = useQuery({
     queryKey: ["properties"],
     queryFn: getProperties,
@@ -57,7 +60,7 @@ export default function DataTable<TValue>({ columns }: DataTableProps<TValue>) {
   });
 
   return (
-    <div>
+    <IsAdminContext.Provider value={isAdmin}>
       <div className="flex items-center justify-between py-4">
         <Input
           placeholder="Filtrar por dirección..."
@@ -67,12 +70,14 @@ export default function DataTable<TValue>({ columns }: DataTableProps<TValue>) {
           }
           className="max-w-sm text-base"
         />
-        <Button className="w-fit self-start" asChild>
-          <Link href="/agregar">
-            <Plus className="h-7 w-7" />
-            <span className="text-base font-semibold">Agregar</span>
-          </Link>
-        </Button>
+        {isAdmin && (
+          <Button className="w-fit self-start" asChild>
+            <Link href="/agregar">
+              <Plus className="h-7 w-7" />
+              <span className="text-base font-semibold">Agregar</span>
+            </Link>
+          </Button>
+        )}
       </div>
       <div className="rounded-md border-2">
         <Table className="text-base">
@@ -147,6 +152,6 @@ export default function DataTable<TValue>({ columns }: DataTableProps<TValue>) {
           </Button>
         </div>
       )}
-    </div>
+    </IsAdminContext.Provider>
   );
 }

@@ -1,23 +1,13 @@
-import {
-  SignUpButton,
-  SignInButton,
-  SignOutButton,
-  SignedIn,
-  SignedOut,
-} from "@clerk/nextjs";
-import { LogOutIcon } from "lucide-react";
+import { SignUpButton, SignInButton, SignedIn, SignedOut } from "@clerk/nextjs";
 
 import { Button } from "@/components/ui/button";
+import SignOutButton from "@/components/sign-out-button";
 
 export default function AuthButtons() {
   return (
     <div>
       <SignedIn>
-        <SignOutButton>
-          <Button className="px-2" title="Cerrar sesión" variant="ghost">
-            <LogOutIcon />
-          </Button>
-        </SignOutButton>
+        <SignOutButton />
       </SignedIn>
       <SignedOut>
         <div className="flex gap-2">

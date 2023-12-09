@@ -12,3 +12,13 @@ export async function deleteProperty(id: number) {
     body: JSON.stringify({ id }),
   });
 }
+
+export async function getIsAdmin(userId: string | null) {
+  if (!userId) return false;
+  return (await db.admin.findUnique({
+    select: { id: true },
+    where: { userId },
+  }))
+    ? true
+    : false;
+}

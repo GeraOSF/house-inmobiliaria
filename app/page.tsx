@@ -1,11 +1,14 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import getQueryClient from "@/lib/query";
+import { auth } from "@clerk/nextjs";
 
-import { getProperties } from "@/app/actions";
+import { getIsAdmin, getProperties } from "@/app/actions";
 import { columns } from "@/app/columns";
 import DataTable from "@/app/data-table";
 
 export default async function Home() {
+  const { userId } = auth();
+  const isAdmin = await getIsAdmin(userId);
   const queryClient = getQueryClient();
   await queryClient.prefetchQuery({
     queryKey: ["properties"],
@@ -16,7 +19,7 @@ export default async function Home() {
   return (
     <main className="container p-2">
       <HydrationBoundary state={dehydratedState}>
-        <DataTable columns={columns} />
+        <DataTable columns={columns} isAdmin={isAdmin} />
       </HydrationBoundary>
     </main>
   );
