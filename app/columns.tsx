@@ -39,7 +39,7 @@ export const columns: ColumnDef<Property>[] = [
   },
   {
     accessorKey: "images",
-    header: "Preview",
+    header: () => <p className="min-w-[10rem]">Preview</p>,
     cell: ({ row }) => {
       const images: string[] = row.getValue("images");
       return (
