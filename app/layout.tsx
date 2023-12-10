@@ -45,6 +45,7 @@ export default function RootLayout({
           dividerLine: "bg-muted",
           dividerText: "text-foreground/60",
           formFieldLabel: "text-foreground",
+          formFieldInput: "bg-background border border-input text-foreground",
           footerActionText: "text-foreground/70",
         },
         variables: {
