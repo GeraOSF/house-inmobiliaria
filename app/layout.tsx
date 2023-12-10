@@ -5,16 +5,17 @@ import { Open_Sans } from "next/font/google";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 import { ClerkProvider } from "@clerk/nextjs";
+import { esES } from "@clerk/localizations";
 
 import { Providers } from "@/app/providers";
 import { ourFileRouter } from "@/app/api/uploadthing/core";
 import { ThemeSwitcher } from "@/components/theme-switcher";
 import { Toaster } from "@/components/ui/toaster";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
+import AuthButtons from "@/components/auth-buttons";
 
 import "./globals.css";
 import "@uploadthing/react/styles.css";
-import AuthButtons from "@/components/auth-buttons";
 
 const openSans = Open_Sans({
   subsets: ["latin"],
@@ -32,7 +33,25 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider>
+    <ClerkProvider
+      localization={esES}
+      appearance={{
+        elements: {
+          card: "bg-background shadow-none sm:shadow-lg sm:ring-2 sm:ring-primary",
+          headerTitle: "text-foreground",
+          headerSubtitle: "text-foreground/70 font-light",
+          socialButtonsBlockButton: buttonVariants({ variant: "outline" }),
+          socialButtonsBlockButtonText: "text-foreground",
+          dividerLine: "bg-muted",
+          dividerText: "text-foreground/60",
+          formFieldLabel: "text-foreground",
+          footerActionText: "text-foreground/70",
+        },
+        variables: {
+          colorPrimary: "hsl(142.1 70.6% 45.3%)",
+        },
+      }}
+    >
       <html lang="es" suppressHydrationWarning>
         <body className={openSans.className}>
           <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
