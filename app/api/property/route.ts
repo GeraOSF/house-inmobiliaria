@@ -1,13 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { utapi } from "@/lib/uploadthing-server";
-import { auth } from "@clerk/nextjs";
 
 import { db } from "@/lib/prisma";
 import { propertySchema } from "@/lib/validations";
 import { getIsAdmin } from "@/app/actions";
 
 export async function POST(req: NextRequest) {
-  if (!(await isAdmin()))
+  if (!(await getIsAdmin()))
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   const body = await req.json();
   const parsedBody = propertySchema.safeParse(body);
@@ -23,7 +22,7 @@ export async function POST(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
-  if (!(await isAdmin()))
+  if (!(await getIsAdmin()))
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   const { id } = await req.json();
   const property = await db.property.findUnique({
@@ -35,10 +34,4 @@ export async function DELETE(req: NextRequest) {
   }
   await db.property.delete({ where: { id } });
   return NextResponse.json({ message: "Property deleted" });
-}
-
-async function isAdmin() {
-  const { userId } = auth();
-  if (!(await getIsAdmin(userId))) return false;
-  return true;
 }

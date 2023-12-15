@@ -11,10 +11,9 @@ export const ourFileRouter = {
   })
     .middleware(async () => {
       const { userId } = auth();
-      if (!(await getIsAdmin(userId))) {
+      if (!(await getIsAdmin())) {
         throw new Error("Client is not authorized to upload files");
       }
-      console.log(`User ${userId} is authorized to upload files`);
       return { userId };
     })
     .onUploadComplete(() => {}),

@@ -1,4 +1,5 @@
 import { db } from "@/lib/prisma";
+import { auth } from "@clerk/nextjs";
 
 export async function getProperties() {
   return await db.property.findMany({
@@ -13,7 +14,8 @@ export async function deleteProperty(id: number) {
   });
 }
 
-export async function getIsAdmin(userId: string | null) {
+export async function getIsAdmin() {
+  const { userId } = auth();
   if (!userId) return false;
   return (await db.admin.findUnique({
     select: { id: true },
