@@ -17,11 +17,6 @@ export const columns: ColumnDef<Property>[] = [
     header: "Dirección",
   },
   {
-    accessorKey: "commission",
-    header: ({ column }) => <SortButton column={column}>Comisión</SortButton>,
-    cell: ({ row }) => <div>{row.getValue("commission")}%</div>,
-  },
-  {
     accessorKey: "subtype",
     header: ({ column }) => <SortButton column={column}>Subtipo</SortButton>,
     cell: ({ row }) => {
@@ -76,6 +71,12 @@ export const columns: ColumnDef<Property>[] = [
     },
   },
 ];
+
+export const adminColumns = columns.toSpliced(2, 0, {
+  accessorKey: "commission",
+  header: ({ column }) => <SortButton column={column}>Comisión</SortButton>,
+  cell: ({ row }) => <div>{row.getValue("commission")}%</div>,
+});
 
 function SortButton({
   column,

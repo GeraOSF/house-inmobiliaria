@@ -2,7 +2,7 @@ import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import getQueryClient from "@/lib/query";
 
 import { getIsAdmin, getProperties } from "@/app/actions";
-import { columns } from "@/app/columns";
+import { columns, adminColumns } from "@/app/columns";
 import DataTable from "@/app/data-table";
 
 export default async function Home() {
@@ -17,7 +17,10 @@ export default async function Home() {
   return (
     <main className="container p-2">
       <HydrationBoundary state={dehydratedState}>
-        <DataTable columns={columns} isAdmin={isAdmin} />
+        <DataTable
+          columns={isAdmin ? adminColumns : columns}
+          isAdmin={isAdmin}
+        />
       </HydrationBoundary>
     </main>
   );
