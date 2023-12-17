@@ -15,7 +15,7 @@ export const formSchema = z.object({
   operation: z.enum(["SALE", "RENT", "TRANSFER"]),
   subtype: z.enum(["HOUSE", "APARTMENT", "LAND"]),
   bedrooms: z.number().int().nonnegative(),
-  bathrooms: z.number().int().nonnegative(),
+  bathrooms: z.number().nonnegative(),
   price: z.number().int().positive(),
   address: z.string().min(1),
   description: z.string().min(1),

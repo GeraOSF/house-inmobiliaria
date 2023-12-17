@@ -14,7 +14,7 @@ model Property {
   operation   Operation
   subtype     Subtype
   bedrooms    Int
-  bathrooms   Int
+  bathrooms   Float
   price       Int
   address     String
   coordinates Json

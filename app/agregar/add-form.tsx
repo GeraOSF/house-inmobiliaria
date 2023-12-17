@@ -167,7 +167,7 @@ export default function AddForm({
               </FormItem>
             )}
           />
-          {/* Rooms */}
+          {/* Bedrooms */}
           <FormField
             control={form.control}
             name="bedrooms"
