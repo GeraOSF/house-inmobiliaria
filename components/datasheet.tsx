@@ -74,7 +74,6 @@ export default function Datasheet({ property }: { property: Property }) {
         <Text style={{ fontSize: 14, fontFamily: "Helvetica-Bold" }}>
           {translations[property.operation]}: {price} MXN
         </Text>
-        <Separator />
         <View
           style={{
             display: "flex",
@@ -149,14 +148,16 @@ export default function Datasheet({ property }: { property: Property }) {
         <Separator />
         <Text style={{ fontFamily: "Helvetica-Bold" }}>Descripción:</Text>
         <Text>{property.description}</Text>
-        <Separator />
         {property.coordinates != null && (
           <>
-            <Text style={{ fontFamily: "Helvetica-Bold" }}>Referencias:</Text>
-            <Image
-              src={`https://maps.googleapis.com/maps/api/staticmap?center=${coordinates}&zoom=15&size=600x300&markers=color:red%7C${coordinates}&key=${API_KEY}`}
-              style={{ width: "80%", margin: "0 auto" }}
-            />
+            <Separator />
+            <View break>
+              <Text style={{ fontFamily: "Helvetica-Bold" }}>Referencias:</Text>
+              <Image
+                src={`https://maps.googleapis.com/maps/api/staticmap?center=${coordinates}&zoom=15&size=600x300&markers=color:red%7C${coordinates}&key=${API_KEY}`}
+                style={{ width: "80%", margin: "0 auto" }}
+              />
+            </View>
           </>
         )}
       </Page>
