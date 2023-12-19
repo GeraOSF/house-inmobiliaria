@@ -37,7 +37,7 @@ export default function RootLayout({
       localization={esES}
       appearance={{
         elements: {
-          card: "bg-background shadow-none sm:shadow-lg sm:ring-2 sm:ring-primary",
+          card: "bg-background shadow-none sm:shadow-lg sm:ring-2 sm:ring-primary -sm:p-2",
           headerTitle: "text-foreground",
           headerSubtitle: "text-foreground/70 font-light",
           socialButtonsBlockButton: buttonVariants({ variant: "outline" }),
