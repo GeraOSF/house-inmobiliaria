@@ -1,5 +1,6 @@
+"use client";
 import Link from "next/link";
-import { useContext } from "react";
+import { useContext, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Property } from "@prisma/client";
 import { useMutation } from "@tanstack/react-query";
@@ -9,8 +10,11 @@ import {
   Clipboard,
   CopyCheck,
   Trash,
+  Download,
 } from "lucide-react";
+import { PDFDownloadLink } from "@react-pdf/renderer";
 
+import { cn } from "@/lib/utils";
 import { IsAdminContext } from "./data-table";
 import { useToast } from "@/components/ui/use-toast";
 import { deleteProperty } from "@/app/actions";
@@ -23,19 +27,34 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import Datasheet from "@/components/datasheet";
 
 export default function TableDropDownMenu({
   property,
 }: {
   property: Property;
 }) {
+  const isAdmin = useContext(IsAdminContext);
   const router = useRouter();
   const { toast } = useToast();
   const { mutateAsync } = useMutation({
     mutationFn: deleteProperty,
     onSuccess: router.refresh,
   });
-  const isAdmin = useContext(IsAdminContext);
+  const [width, setWidth] = useState(window.innerWidth);
+
+  function handleWindowSizeChange() {
+    setWidth(window.innerWidth);
+  }
+
+  useEffect(() => {
+    window.addEventListener("resize", handleWindowSizeChange);
+    return () => {
+      window.removeEventListener("resize", handleWindowSizeChange);
+    };
+  }, []);
+
+  const isMobile = width <= 768;
 
   return (
     <DropdownMenu>
@@ -47,12 +66,37 @@ export default function TableDropDownMenu({
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Menú</DropdownMenuLabel>
-        <DropdownMenuItem className="gap-1" asChild>
-          <Link href={`/ficha/${property.id}`}>
-            <FileText />
-            Ver ficha técnica
-          </Link>
-        </DropdownMenuItem>
+        {isMobile ? (
+          <DropdownMenuItem className="gap-1 p-0">
+            <PDFDownloadLink
+              document={<Datasheet property={property} />}
+              fileName={`propiedad-${property.id}`}
+              className="flex cursor-default items-center gap-1 p-2"
+            >
+              {({ loading }) => (
+                <>
+                  <Download />
+                  <span
+                    className={cn("transition-opacity", {
+                      "opacity-70": loading,
+                    })}
+                  >
+                    {loading
+                      ? "Generando ficha técnica"
+                      : "Descargar ficha técnica"}{" "}
+                  </span>
+                </>
+              )}
+            </PDFDownloadLink>
+          </DropdownMenuItem>
+        ) : (
+          <DropdownMenuItem className="gap-1" asChild>
+            <Link href={`/ficha/${property.id}`}>
+              <FileText />
+              Ver ficha técnica
+            </Link>
+          </DropdownMenuItem>
+        )}
         <DropdownMenuItem
           onClick={() => {
             navigator.clipboard.writeText(property.id.toString());

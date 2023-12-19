@@ -15,13 +15,6 @@ module.exports = {
         "2xl": "1400px",
       },
     },
-    screens: {
-      "-sm": { max: "640px" },
-      "-md": { max: "768px" },
-      "-lg": { max: "1024px" },
-      "-xl": { max: "1280px" },
-      "-2xl": { max: "1536px" },
-    },
     extend: {
       colors: {
         border: "hsl(var(--border))",
@@ -76,6 +69,13 @@ module.exports = {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+      },
+      screens: {
+        "-sm": { max: "640px" },
+        "-md": { max: "768px" },
+        "-lg": { max: "1024px" },
+        "-xl": { max: "1280px" },
+        "-2xl": { max: "1536px" },
       },
     },
   },
