@@ -135,16 +135,6 @@ export default function Datasheet({ property }: { property: Property }) {
               </Text>
             </Item>
           )}
-          {property.aircon != null && (
-            <Item decorated>
-              <Text>
-                <Text style={{ fontFamily: "Helvetica-Bold" }}>
-                  Aire acondicionado:
-                </Text>{" "}
-                {translations[property.aircon]}
-              </Text>
-            </Item>
-          )}
           {property.heating != null && (
             <Item decorated>
               <Text>

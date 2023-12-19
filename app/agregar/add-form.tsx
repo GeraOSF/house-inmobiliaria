@@ -411,32 +411,6 @@ export default function AddForm({
               </FormItem>
             )}
           />
-          {/* Aircon */}
-          <FormField
-            control={form.control}
-            name="aircon"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Select onValueChange={field.onChange}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Tipo de aire acondicionado" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="CENTRAL">
-                        Aire acondicionado central
-                      </SelectItem>
-                      <SelectItem value="AVAILABLE">
-                        Aire acondicionado disponible
-                      </SelectItem>
-                      <SelectItem value="NONE">Ninguno</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
           {/* Heating */}
           <FormField
             control={form.control}

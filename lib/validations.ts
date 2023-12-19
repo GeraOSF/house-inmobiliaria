@@ -26,7 +26,6 @@ export const formSchema = z.object({
   parking: z
     .enum(["COVERED", "PUBLIC", "PRIVATE", "AVAILABLE", "NONE"])
     .optional(),
-  aircon: z.enum(["CENTRAL", "AVAILABLE", "NONE"]).optional(),
   heating: z
     .enum(["CENTRAL", "ELECTRIC", "GAS", "RADIATORS", "AVAILABLE", "NONE"])
     .optional(),

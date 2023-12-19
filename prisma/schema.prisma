@@ -24,7 +24,6 @@ model Property {
   area          Int?
   washing       Washing?
   parking       Parking?
-  aircon        Aircon?
   heating       Heating?
   createdAt     DateTime  @default(now())
 }
@@ -57,12 +56,6 @@ enum Parking {
   COVERED
   PUBLIC
   PRIVATE
-  AVAILABLE
-  NONE
-}
-
-enum Aircon {
-  CENTRAL
   AVAILABLE
   NONE
 }

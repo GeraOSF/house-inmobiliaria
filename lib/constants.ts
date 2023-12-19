@@ -14,12 +14,6 @@
 //   NONE
 // }
 
-// enum Aircon {
-//   CENTRAL
-//   AVAILABLE
-//   NONE
-// }
-
 // enum Heating {
 //   CENTRAL
 //   ELECTRIC
