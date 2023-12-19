@@ -8,17 +8,22 @@ import { getIsAdmin } from "@/app/actions";
 export async function POST(req: NextRequest) {
   if (!(await getIsAdmin()))
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+
   const body = await req.json();
-  const parsedBody = propertySchema.safeParse(body);
-
-  if (!parsedBody.success)
-    return NextResponse.json(parsedBody.error, { status: 400 });
-
-  const { data } = parsedBody;
-
-  await db.property.create({ data });
-
-  return NextResponse.json({ message: "Property created" });
+  try {
+    const data = propertySchema.parse(body);
+    await db.property.create({ data });
+    return NextResponse.json({ message: "Property created" });
+  } catch (error) {
+    console.error(error);
+    if (body?.imageKeys?.length) {
+      await utapi.deleteFiles(body.imageKeys);
+    }
+    return NextResponse.json(
+      { message: "An error occured creating the property" },
+      { status: 500 },
+    );
+  }
 }
 
 export async function DELETE(req: NextRequest) {
