@@ -20,6 +20,7 @@ export const formSchema = z.object({
   address: z.string().min(1),
   description: z.string().min(1),
   commission: z.number().int().nonnegative(),
+  acceptsCredit: z.boolean(),
   area: z.number().int().positive().optional(),
   washing: z.enum(["UNIT", "BUILDING", "AVAILABLE", "NONE"]).optional(),
   parking: z

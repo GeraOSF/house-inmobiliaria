@@ -31,6 +31,8 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 export default function AddForm({
   revalidate,
@@ -44,6 +46,9 @@ export default function AddForm({
   const [coordinates, setCoordinates] = useState({ lat: 0, lng: 0 });
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      acceptsCredit: false,
+    },
   });
   const { startUpload } = useUploadThing("imageUploader");
   const {
@@ -294,6 +299,29 @@ export default function AddForm({
                     id={field.name}
                   />
                 </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          {/* Accepts credit */}
+          <FormField
+            control={form.control}
+            name="acceptsCredit"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <div className="flex items-center gap-2">
+                    <Switch
+                      id={field.name}
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                    <Label htmlFor={field.name}>Acepta crédito</Label>
+                  </div>
+                </FormControl>
+                <FormDescription>
+                  Crédito Infonavit, Fovissste, bancario, etc.
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
