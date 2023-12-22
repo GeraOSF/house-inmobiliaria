@@ -68,6 +68,14 @@ export default function AddForm({
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    if (!files.length) {
+      toast({
+        title: "Error",
+        description: "Debe agregar al menos una imagen.",
+        variant: "destructive",
+      });
+      return;
+    }
     try {
       setSubmitting(true);
       const utResponse = await startUpload(files);
