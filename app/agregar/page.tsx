@@ -1,6 +1,6 @@
 import { revalidatePath } from "next/cache";
 
-import AddForm from "./add-form";
+import PropertyForm from "@/components/property-form";
 import { redirect } from "next/navigation";
 import { getIsAdmin } from "@/app/actions";
 
@@ -9,7 +9,7 @@ export default async function AddPage() {
 
   return (
     <main className="container flex flex-col items-center gap-2 p-2">
-      <AddForm
+      <PropertyForm
         revalidate={async (path) => {
           "use server";
           revalidatePath(path);

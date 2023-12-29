@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { utapi } from "@/lib/uploadthing-server";
 
 import { db } from "@/lib/prisma";
-import { propertySchema } from "@/lib/validations";
+import { propertySchema, editPropertySchema } from "@/lib/validations";
 import { getIsAdmin } from "@/app/actions";
 
 export async function POST(req: NextRequest) {
@@ -21,6 +21,24 @@ export async function POST(req: NextRequest) {
     }
     return NextResponse.json(
       { message: "An error occured creating the property" },
+      { status: 500 },
+    );
+  }
+}
+
+export async function PATCH(req: NextRequest) {
+  if (!(await getIsAdmin()))
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+
+  const body = await req.json();
+  try {
+    const data = editPropertySchema.parse(body);
+    await db.property.update({ where: { id: data.id }, data });
+    return NextResponse.json({ message: "Property updated" });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json(
+      { message: "An error occured updating the property" },
       { status: 500 },
     );
   }

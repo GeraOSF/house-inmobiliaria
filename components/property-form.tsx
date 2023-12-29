@@ -6,6 +6,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { CircleDashed } from "lucide-react";
 import usePlacesService from "react-google-autocomplete/lib/usePlacesAutocompleteService";
+import { useMutation } from "@tanstack/react-query";
+import { type Property } from "@prisma/client";
 
 import { cn } from "@/lib/utils";
 import { useUploadThing } from "@/lib/uploadthing";
@@ -33,21 +35,42 @@ import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { createProperty, editProperty } from "@/app/actions";
 
-export default function AddForm({
+type Props = {
+  revalidate?: (path: string) => void;
+  isEdit?: boolean;
+  property?: Property;
+  closeSheet?: () => void;
+};
+
+export default function PropertyForm({
   revalidate,
-}: {
-  revalidate: (path: string) => void;
-}) {
+  isEdit,
+  property,
+  closeSheet,
+}: Props) {
   const { toast } = useToast();
   const router = useRouter();
+  const { mutateAsync: mutateAsyncEdit } = useMutation({
+    mutationFn: editProperty,
+    onSuccess: router.refresh,
+  });
   const [submitting, setSubmitting] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
-  const [coordinates, setCoordinates] = useState({ lat: 0, lng: 0 });
+  const [coordinates, setCoordinates] = useState(
+    (property?.coordinates as { lat: number; lng: number }) ?? {
+      lat: 0,
+      lng: 0,
+    },
+  );
+  let initialValues = {};
+  if (property) initialValues = { ...property };
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       acceptsCredit: false,
+      ...initialValues,
     },
   });
   const { startUpload } = useUploadThing("imageUploader");
@@ -68,48 +91,63 @@ export default function AddForm({
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    if (!files.length) {
-      toast({
-        title: "Error",
-        description: "Debe agregar al menos una imagen.",
-        variant: "destructive",
-      });
-      return;
-    }
-    try {
-      setSubmitting(true);
-      const utResponse = await startUpload(files);
-      const urls: string[] = [];
-      const keys: string[] = [];
-      for (const img of utResponse!) {
-        urls.push(img.url);
-        keys.push(img.key);
+    setSubmitting(true);
+    if (isEdit && property) {
+      try {
+        await mutateAsyncEdit({ id: property.id, ...values, coordinates });
+        if (closeSheet) closeSheet();
+        toast({
+          title: "Éxito",
+          description: "La propiedad se editó correctamente.",
+        });
+      } catch (error) {
+        console.error(error);
+        toast({
+          title: "Error",
+          description:
+            "Ocurrió un error al editar la propiedad, intente de nuevo.",
+          variant: "destructive",
+        });
       }
-      await fetch("/api/property", {
-        method: "POST",
-        body: JSON.stringify({
+    } else {
+      if (!files.length) {
+        toast({
+          title: "Error",
+          description: "Debe agregar al menos una imagen.",
+          variant: "destructive",
+        });
+        return;
+      }
+      try {
+        const utResponse = await startUpload(files);
+        const urls: string[] = [];
+        const keys: string[] = [];
+        for (const img of utResponse!) {
+          urls.push(img.url);
+          keys.push(img.key);
+        }
+        await createProperty({
           ...values,
           images: urls,
           imageKeys: keys,
           coordinates,
-        }),
-      });
-      revalidate("/");
-      router.push("/");
-    } catch (error) {
-      console.error(error);
-      toast({
-        title: "Error",
-        description:
-          "Ocurrió un error al agregar la propiedad, intente de nuevo.",
-        variant: "destructive",
-      });
-    } finally {
-      setSubmitting(false);
+        });
+        if (revalidate) revalidate("/");
+        router.push("/");
+      } catch (error) {
+        console.error(error);
+        toast({
+          title: "Error",
+          description:
+            "Ocurrió un error al agregar la propiedad, intente de nuevo.",
+          variant: "destructive",
+        });
+      }
     }
+    setSubmitting(false);
   }
   useEffect(() => {
-    if (placePredictions.length)
+    if (placePredictions.length) {
       placesService?.getDetails(
         {
           placeId: placePredictions[0].place_id,
@@ -121,6 +159,7 @@ export default function AddForm({
           });
         },
       );
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [placePredictions]);
 
@@ -132,7 +171,7 @@ export default function AddForm({
           className="flex flex-col gap-4 pt-4"
         >
           {/* Images */}
-          <MultiUploader setFiles={setFiles} />
+          {!isEdit && <MultiUploader setFiles={setFiles} />}
           {/* Operation */}
           <FormField
             control={form.control}
@@ -140,7 +179,7 @@ export default function AddForm({
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Select onValueChange={field.onChange}>
+                  <Select {...field} onValueChange={field.onChange}>
                     <SelectTrigger>
                       <SelectValue
                         className="text-muted-foreground"
@@ -165,7 +204,7 @@ export default function AddForm({
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Select onValueChange={field.onChange}>
+                  <Select {...field} onValueChange={field.onChange}>
                     <SelectTrigger>
                       <SelectValue placeholder="Tipo de propiedad" />
                     </SelectTrigger>
@@ -365,7 +404,7 @@ export default function AddForm({
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Select onValueChange={field.onChange}>
+                  <Select {...field} onValueChange={field.onChange}>
                     <SelectTrigger>
                       <SelectValue placeholder="Tipo de lavadero" />
                     </SelectTrigger>
@@ -394,7 +433,7 @@ export default function AddForm({
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Select onValueChange={field.onChange}>
+                  <Select {...field} onValueChange={field.onChange}>
                     <SelectTrigger>
                       <SelectValue placeholder="Tipo de estacionamiento" />
                     </SelectTrigger>
@@ -426,7 +465,7 @@ export default function AddForm({
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Select onValueChange={field.onChange}>
+                  <Select {...field} onValueChange={field.onChange}>
                     <SelectTrigger>
                       <SelectValue placeholder="Tipo de calefacción" />
                     </SelectTrigger>
@@ -454,7 +493,7 @@ export default function AddForm({
           />
           <Separator />
           <Button
-            className={cn("gap-1", {
+            className={cn("gap-1 font-bold", {
               "cursor-wait": submitting,
             })}
             disabled={submitting}
@@ -462,8 +501,11 @@ export default function AddForm({
           >
             {submitting ? (
               <>
-                Agregando <CircleDashed className="animate-spin" />
+                {isEdit ? "Guardando" : "Agregando"}{" "}
+                <CircleDashed className="animate-spin" />
               </>
+            ) : isEdit ? (
+              "Guardar"
             ) : (
               "Agregar"
             )}

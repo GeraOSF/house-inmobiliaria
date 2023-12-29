@@ -2,7 +2,7 @@
 import { useState, createContext } from "react";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import { Property } from "@prisma/client";
+import { type Property } from "@prisma/client";
 import { Plus } from "lucide-react";
 import {
   ColumnDef,

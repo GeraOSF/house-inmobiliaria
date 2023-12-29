@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/alt-text */
 // ^Added this because react-pdf Image component doesn't support alt prop
-import { Property } from "@prisma/client";
+import { type Property } from "@prisma/client";
 import {
   Document,
   StyleSheet,
