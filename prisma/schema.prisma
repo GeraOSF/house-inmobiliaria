@@ -28,11 +28,6 @@ model Property {
   createdAt     DateTime  @default(now())
 }
 
-model Admin {
-  id     Int    @id @default(autoincrement())
-  userId String @unique
-}
-
 enum Subtype {
   HOUSE
   APARTMENT

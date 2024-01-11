@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useContext, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { type Property } from "@prisma/client";
 import { useMutation } from "@tanstack/react-query";
@@ -14,9 +14,9 @@ import {
   Pencil,
 } from "lucide-react";
 import { PDFDownloadLink } from "@react-pdf/renderer";
+import { useUser } from "@clerk/nextjs";
 
 import { cn } from "@/lib/utils";
-import { IsAdminContext } from "./data-table";
 import { useToast } from "@/components/ui/use-toast";
 import { deleteProperty } from "@/app/actions";
 import { Button } from "@/components/ui/button";
@@ -54,7 +54,8 @@ export default function TableDropDownMenu({
 }: {
   property: Property;
 }) {
-  const isAdmin = useContext(IsAdminContext);
+  const { user } = useUser();
+  const isAdmin = !!user?.publicMetadata?.isAdmin;
   const router = useRouter();
   const { toast } = useToast();
   const { mutateAsync: mutateAsyncDelete } = useMutation({

@@ -1,8 +1,6 @@
 import { auth } from "@clerk/nextjs";
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 
-import { getIsAdmin } from "@/app/actions";
-
 const f = createUploadthing();
 
 export const ourFileRouter = {
@@ -10,11 +8,12 @@ export const ourFileRouter = {
     image: { maxFileSize: "8MB", maxFileCount: 20 },
   })
     .middleware(async () => {
-      const { userId } = auth();
-      if (!(await getIsAdmin())) {
+      const { sessionClaims } = auth();
+      const isAdmin = !!sessionClaims?.isAdmin;
+      if (!isAdmin) {
         throw new Error("Client is not authorized to upload files");
       }
-      return { userId };
+      return {};
     })
     .onUploadComplete(() => {}),
 } satisfies FileRouter;

@@ -1,11 +1,13 @@
 import { revalidatePath } from "next/cache";
+import { auth } from "@clerk/nextjs";
 
 import PropertyForm from "@/components/property-form";
 import { redirect } from "next/navigation";
-import { getIsAdmin } from "@/app/actions";
 
 export default async function AddPage() {
-  if (!(await getIsAdmin())) redirect("/");
+  const { sessionClaims } = auth();
+  const isAdmin = !!sessionClaims?.isAdmin;
+  if (!isAdmin) redirect("/");
 
   return (
     <main className="container flex flex-col items-center gap-2 p-2">

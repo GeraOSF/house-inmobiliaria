@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { utapi } from "@/lib/uploadthing-server";
+import { auth } from "@clerk/nextjs";
 
+import { utapi } from "@/lib/uploadthing-server";
 import { db } from "@/lib/prisma";
 import { propertySchema, editPropertySchema } from "@/lib/validations";
-import { getIsAdmin } from "@/app/actions";
 
 export async function POST(req: NextRequest) {
-  if (!(await getIsAdmin()))
+  if (!isAdmin())
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
 
   const body = await req.json();
@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
 }
 
 export async function PATCH(req: NextRequest) {
-  if (!(await getIsAdmin()))
+  if (!isAdmin())
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
 
   const body = await req.json();
@@ -45,7 +45,7 @@ export async function PATCH(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
-  if (!(await getIsAdmin()))
+  if (!isAdmin())
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   const { id } = await req.json();
   const property = await db.property.findUnique({
@@ -57,4 +57,9 @@ export async function DELETE(req: NextRequest) {
   }
   await db.property.delete({ where: { id } });
   return NextResponse.json({ message: "Property deleted" });
+}
+
+function isAdmin() {
+  const { sessionClaims } = auth();
+  return !!sessionClaims?.isAdmin;
 }

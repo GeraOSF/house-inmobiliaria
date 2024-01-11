@@ -1,5 +1,5 @@
 "use client";
-import { useState, createContext } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { type Property } from "@prisma/client";
@@ -28,8 +28,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { getProperties } from "@/app/actions";
-
-export const IsAdminContext = createContext(false);
 
 interface Props<TValue> {
   columns: ColumnDef<Property, TValue>[];
@@ -60,7 +58,7 @@ export default function DataTable<TValue>({ columns, isAdmin }: Props<TValue>) {
   });
 
   return (
-    <IsAdminContext.Provider value={isAdmin}>
+    <section>
       <div className="flex items-center justify-between py-4">
         <Input
           placeholder="Filtrar por dirección..."
@@ -152,6 +150,6 @@ export default function DataTable<TValue>({ columns, isAdmin }: Props<TValue>) {
           </Button>
         </div>
       )}
-    </IsAdminContext.Provider>
+    </section>
   );
 }

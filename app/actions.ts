@@ -30,14 +30,3 @@ export async function deleteProperty(id: number) {
     body: JSON.stringify({ id }),
   });
 }
-
-export async function getIsAdmin() {
-  const { userId } = auth();
-  if (!userId) return false;
-  return (await db.admin.findUnique({
-    select: { id: true },
-    where: { userId },
-  }))
-    ? true
-    : false;
-}

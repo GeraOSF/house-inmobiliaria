@@ -1,12 +1,14 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
-import getQueryClient from "@/lib/query";
+import { auth } from "@clerk/nextjs";
 
-import { getIsAdmin, getProperties } from "@/app/actions";
+import getQueryClient from "@/lib/query";
+import { getProperties } from "@/app/actions";
 import { columns, adminColumns } from "@/app/columns";
 import DataTable from "@/app/data-table";
 
 export default async function Home() {
-  const isAdmin = await getIsAdmin();
+  const { sessionClaims } = auth();
+  const isAdmin = !!sessionClaims?.isAdmin;
   const queryClient = getQueryClient();
   await queryClient.prefetchQuery({
     queryKey: ["properties"],
