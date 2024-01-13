@@ -1,4 +1,3 @@
-import { auth } from "@clerk/nextjs";
 import { z } from "zod";
 
 import { db } from "@/lib/prisma";
