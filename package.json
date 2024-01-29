@@ -7,7 +7,9 @@
     "build": "next build",
     "postinstall": "prisma generate",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "playwright test",
+    "test:ui": "playwright test --ui"
   },
   "dependencies": {
     "@clerk/localizations": "^1.26.13",
@@ -44,6 +46,7 @@
     "zod-i18n-map": "^2.25.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.40.1",
     "@tanstack/eslint-plugin-query": "^5.17.7",
     "@types/node": "^20.11.0",
     "@types/react": "^18.2.47",
