@@ -20,7 +20,7 @@ model Property {
   address       String
   coordinates   Json
   description   String
-  commission    Int
+  commission    Float
   acceptsCredit Boolean
   area          Int?
   washing       Washing?

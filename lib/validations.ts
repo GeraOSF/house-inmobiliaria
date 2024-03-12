@@ -19,7 +19,7 @@ export const formSchema = z.object({
   price: z.number().int().positive(),
   address: z.string().min(1),
   description: z.string().min(1),
-  commission: z.number().int().nonnegative(),
+  commission: z.number().multipleOf(0.01).nonnegative(),
   acceptsCredit: z.boolean(),
   area: z.number().int().positive().optional(),
   washing: z.enum(["UNIT", "BUILDING", "AVAILABLE", "NONE"]).optional(),
