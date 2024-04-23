@@ -56,7 +56,6 @@ export default function PropertyForm({
     mutationFn: editProperty,
     onSuccess: router.refresh,
   });
-  const [submitting, setSubmitting] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
   const [coordinates, setCoordinates] = useState(
     (property?.coordinates as { lat: number; lng: number }) ?? {
@@ -91,7 +90,6 @@ export default function PropertyForm({
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setSubmitting(true);
     if (isEdit && property) {
       try {
         await mutateAsyncEdit({ id: property.id, ...values, coordinates });
@@ -144,7 +142,6 @@ export default function PropertyForm({
         });
       }
     }
-    setSubmitting(false);
   }
   useEffect(() => {
     if (placePredictions.length) {
@@ -162,6 +159,8 @@ export default function PropertyForm({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [placePredictions]);
+
+  const isSubmitting = form.formState.isSubmitting;
 
   return (
     <div>
@@ -295,7 +294,7 @@ export default function PropertyForm({
                         getPlacePredictions({ input: e.target.value });
                       }}
                       autoComplete="off"
-                      disabled={submitting}
+                      disabled={isSubmitting}
                     />
                     <datalist className="w-full" id="addressList">
                       {placePredictions?.map((place) => (
@@ -494,12 +493,12 @@ export default function PropertyForm({
           <Separator />
           <Button
             className={cn("gap-1 font-bold", {
-              "cursor-wait": submitting,
+              "cursor-wait": isSubmitting,
             })}
-            disabled={submitting}
+            disabled={isSubmitting}
             type="submit"
           >
-            {submitting ? (
+            {isSubmitting ? (
               <>
                 {isEdit ? "Guardando" : "Agregando"}{" "}
                 <CircleDashed className="animate-spin" />
