@@ -2,7 +2,6 @@ import { useState, useCallback } from "react";
 import { UploadIcon, XIcon } from "lucide-react";
 import { useDropzone } from "@uploadthing/react/hooks";
 import { generateClientDropzoneAccept } from "uploadthing/client";
-import type { FileWithPath } from "@uploadthing/react";
 
 import { useUploadThing } from "@/lib/uploadthing";
 import { Button } from "@/components/ui/button";
@@ -12,7 +11,7 @@ type Props = {
 };
 export default function MultiUploader({ setFiles }: Props) {
   const [urls, setUrls] = useState<string[]>([]);
-  const onDrop = useCallback((acceptedFiles: FileWithPath[]) => {
+  const onDrop = useCallback((acceptedFiles: File[]) => {
     setUrls((prevData) => [
       ...prevData,
       ...acceptedFiles.map((file) => URL.createObjectURL(file)),
