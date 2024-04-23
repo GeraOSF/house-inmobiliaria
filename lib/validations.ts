@@ -21,7 +21,7 @@ export const formSchema = z.object({
   description: z.string().min(1),
   commission: z.number().multipleOf(0.01).nonnegative(),
   acceptsCredit: z.boolean(),
-  area: z.number().int().positive().optional(),
+  area: z.number().multipleOf(0.01).positive().optional(),
   washing: z.enum(["UNIT", "BUILDING", "AVAILABLE", "NONE"]).optional(),
   parking: z
     .enum(["COVERED", "PUBLIC", "PRIVATE", "AVAILABLE", "NONE"])

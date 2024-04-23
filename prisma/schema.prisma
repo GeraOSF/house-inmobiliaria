@@ -22,7 +22,7 @@ model Property {
   description   String
   commission    Float
   acceptsCredit Boolean
-  area          Int?
+  area          Float?
   washing       Washing?
   parking       Parking?
   heating       Heating?
