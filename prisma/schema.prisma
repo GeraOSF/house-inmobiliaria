@@ -26,6 +26,7 @@ model Property {
   washing       Washing?
   parking       Parking?
   heating       Heating?
+  privateNotes  String?
   createdAt     DateTime  @default(now())
 }
 

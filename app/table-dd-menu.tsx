@@ -12,6 +12,7 @@ import {
   Trash,
   Download,
   Pencil,
+  StickyNote,
 } from "lucide-react";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { useUser } from "@clerk/nextjs";
@@ -65,6 +66,7 @@ export default function TableDropDownMenu({
   const [width, setWidth] = useState(770);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isEditSheetOpen, setIsEditSheetOpen] = useState(false);
+  const [isNotesDialogOpen, setIsNotesDialogOpen] = useState(false);
 
   function handleWindowSizeChange() {
     setWidth(window.innerWidth);
@@ -81,86 +83,93 @@ export default function TableDropDownMenu({
   const isMobile = width <= 768;
 
   return (
-    <Sheet open={isEditSheetOpen} onOpenChange={setIsEditSheetOpen}>
-      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Abrir menu</span>
-              <MoreVertical className="h-6 w-6" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Menú</DropdownMenuLabel>
-            {isMobile ? (
-              <DropdownMenuItem className="gap-1 p-0">
-                <PDFDownloadLink
-                  document={<Datasheet property={property} />}
-                  fileName={`propiedad-${property.id}`}
-                  className="flex cursor-default items-center gap-1 p-2"
-                >
-                  {({ loading }) => (
-                    <>
-                      <Download />
-                      <span
-                        className={cn("transition-opacity", {
-                          "opacity-70": loading,
-                        })}
-                      >
-                        {loading
-                          ? "Generando ficha técnica"
-                          : "Descargar ficha técnica"}{" "}
-                      </span>
-                    </>
-                  )}
-                </PDFDownloadLink>
-              </DropdownMenuItem>
-            ) : (
-              <DropdownMenuItem className="gap-1" asChild>
-                <Link href={`/ficha/${property.id}`}>
-                  <FileText />
-                  Ver ficha técnica
-                </Link>
-              </DropdownMenuItem>
-            )}
-            <DropdownMenuItem
-              onClick={() => {
-                navigator.clipboard.writeText(property.id.toString());
-                toast({
-                  description: (
-                    <div className="flex items-center gap-2">
-                      <CopyCheck />
-                      Id {property.id} copiada
-                    </div>
-                  ),
-                });
-              }}
-              className="gap-1"
-            >
-              <Clipboard />
-              Copiar ID
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="h-8 w-8 p-0">
+            <span className="sr-only">Abrir menu</span>
+            <MoreVertical className="h-6 w-6" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuLabel>Menú</DropdownMenuLabel>
+          {isMobile ? (
+            <DropdownMenuItem className="gap-1 p-0">
+              <PDFDownloadLink
+                document={<Datasheet property={property} />}
+                fileName={`propiedad-${property.id}`}
+                className="flex cursor-default items-center gap-1 p-2"
+              >
+                {({ loading }) => (
+                  <>
+                    <Download />
+                    <span
+                      className={cn("transition-opacity", {
+                        "opacity-70": loading,
+                      })}
+                    >
+                      {loading
+                        ? "Generando ficha técnica"
+                        : "Descargar ficha técnica"}{" "}
+                    </span>
+                  </>
+                )}
+              </PDFDownloadLink>
             </DropdownMenuItem>
-            {isAdmin && (
-              <>
-                <DropdownMenuItem
-                  onClick={() => setIsEditSheetOpen(true)}
-                  className="gap-1"
-                >
-                  <Pencil />
-                  Editar
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  onClick={() => setIsDeleteDialogOpen(true)}
-                  className="gap-1"
-                >
-                  <Trash />
-                  Eliminar
-                </DropdownMenuItem>
-              </>
-            )}
-          </DropdownMenuContent>
-        </DropdownMenu>
+          ) : (
+            <DropdownMenuItem className="gap-1" asChild>
+              <Link href={`/ficha/${property.id}`}>
+                <FileText />
+                Ver ficha técnica
+              </Link>
+            </DropdownMenuItem>
+          )}
+          {isAdmin && (
+            <>
+              <DropdownMenuItem
+                onClick={() => setIsNotesDialogOpen(true)}
+                className="gap-1"
+              >
+                <StickyNote />
+                Ver notas
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => setIsEditSheetOpen(true)}
+                className="gap-1"
+              >
+                <Pencil />
+                Editar
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={() => setIsDeleteDialogOpen(true)}
+                className="gap-1"
+              >
+                <Trash />
+                Eliminar
+              </DropdownMenuItem>
+            </>
+          )}
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <Dialog open={isNotesDialogOpen} onOpenChange={setIsNotesDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Notas privadas</DialogTitle>
+          </DialogHeader>
+          <span className="italic">
+            {property.privateNotes || "Sin notas privadas."}
+          </span>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button className="mt-2 w-full" variant="outline">
+                Cerrar
+              </Button>
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
@@ -182,7 +191,7 @@ export default function TableDropDownMenu({
                     description: (
                       <div className="flex items-center gap-2">
                         <Trash />
-                        Propiedad con id {property.id} eliminada.
+                        Propiedad eliminada.
                       </div>
                     ),
                   });
@@ -195,26 +204,28 @@ export default function TableDropDownMenu({
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      <SheetContent className="overflow-y-auto">
-        <SheetHeader>
-          <SheetTitle>Editar propiedad</SheetTitle>
-          <SheetDescription>
-            Modificar la información de la propiedad.
-          </SheetDescription>
-        </SheetHeader>
-        <PropertyForm
-          property={property}
-          closeSheet={() => setIsEditSheetOpen(false)}
-          isEdit
-        />
-        <SheetFooter>
-          <SheetClose asChild>
-            <Button className="mt-2 w-full" variant="outline">
-              Cancelar
-            </Button>
-          </SheetClose>
-        </SheetFooter>
-      </SheetContent>
-    </Sheet>
+      <Sheet open={isEditSheetOpen} onOpenChange={setIsEditSheetOpen}>
+        <SheetContent className="overflow-y-auto">
+          <SheetHeader>
+            <SheetTitle>Editar propiedad</SheetTitle>
+            <SheetDescription>
+              Modificar la información de la propiedad.
+            </SheetDescription>
+          </SheetHeader>
+          <PropertyForm
+            property={property}
+            closeSheet={() => setIsEditSheetOpen(false)}
+            isEdit
+          />
+          <SheetFooter>
+            <SheetClose asChild>
+              <Button className="mt-2 w-full" variant="outline">
+                Cancelar
+              </Button>
+            </SheetClose>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
+    </>
   );
 }

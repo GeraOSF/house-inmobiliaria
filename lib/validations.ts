@@ -29,6 +29,7 @@ export const formSchema = z.object({
   heating: z
     .enum(["CENTRAL", "ELECTRIC", "GAS", "RADIATORS", "AVAILABLE", "NONE"])
     .optional(),
+  privateNotes: z.string().optional(),
 });
 
 export const propertySchema = formSchema.extend({

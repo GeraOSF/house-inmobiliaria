@@ -491,6 +491,27 @@ export default function PropertyForm({
             )}
           />
           <Separator />
+          {/* Private notes */}
+          <FormField
+            control={form.control}
+            name="privateNotes"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Textarea
+                    {...field}
+                    placeholder="Notas privadas"
+                    id={field.name}
+                  />
+                </FormControl>
+                <FormDescription>
+                  Información adicional para uso interno.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Separator />
           <Button
             className={cn("gap-1 font-bold", {
               "cursor-wait": isSubmitting,
