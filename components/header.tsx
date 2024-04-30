@@ -12,25 +12,27 @@ export default function Header() {
   const pathname = usePathname();
 
   return (
-    <header className="container flex items-start justify-between p-2">
-      <div className="flex items-center gap-4">
-        <Link href="/">
-          <Button title="Inicio" className="p-2" variant="outline">
-            <Home />
-          </Button>
-        </Link>
-        <ThemeSwitcher />
-      </div>
+    <>
+      <header className="container flex items-start justify-between gap-2 p-2">
+        <div className="flex items-center gap-2">
+          <Link href="/">
+            <Button title="Inicio" className="p-2" variant="outline">
+              <Home />
+            </Button>
+          </Link>
+          <ThemeSwitcher />
+        </div>
+        <AuthButtons />
+      </header>
       {pathname === "/" && (
         <Image
-          src="/banner.png"
-          width={600}
+          src="/banner.jpg"
+          width={2600}
           height={200}
           alt="Banner"
-          className="hidden aspect-[3/1] rounded-md border md:block"
+          className="hidden aspect-[13/1] border md:block"
         />
       )}
-      <AuthButtons />
-    </header>
+    </>
   );
 }
