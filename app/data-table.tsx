@@ -59,7 +59,7 @@ export default function DataTable<TValue>({ columns, isAdmin }: Props<TValue>) {
 
   return (
     <section>
-      <div className="flex items-center justify-between py-4">
+      <div className="flex items-center justify-between gap-2 py-4">
         <Input
           placeholder="Filtrar por dirección..."
           value={(table.getColumn("address")?.getFilterValue() as string) ?? ""}
