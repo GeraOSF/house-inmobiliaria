@@ -9,8 +9,9 @@ export const ourFileRouter = {
   })
     .middleware(async () => {
       const { sessionClaims } = auth();
-      const isAdmin = !!sessionClaims?.isAdmin;
-      if (!isAdmin) {
+      const isAuthorised =
+        !!sessionClaims?.isAdmin || !!sessionClaims?.canAddProperties;
+      if (!isAuthorised) {
         throw new Error("Client is not authorized to upload files");
       }
       return {};
