@@ -6,23 +6,24 @@ import { db } from "@/lib/prisma";
 import { propertySchema, editPropertySchema } from "@/lib/validations";
 
 export async function POST(req: NextRequest) {
-  if (!isAdmin())
-    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-
-  const body = await req.json();
-  try {
-    const data = propertySchema.parse(body);
-    await db.property.create({ data });
-    return NextResponse.json({ message: "Property created" });
-  } catch (error) {
-    console.error(error);
-    if (body?.imageKeys?.length) {
-      await utapi.deleteFiles(body.imageKeys);
+  if (isAdmin() || canAddProperties()) {
+    const body = await req.json();
+    try {
+      const data = propertySchema.parse(body);
+      await db.property.create({ data });
+      return NextResponse.json({ message: "Property created" });
+    } catch (error) {
+      console.error(error);
+      if (body?.imageKeys?.length) {
+        await utapi.deleteFiles(body.imageKeys);
+      }
+      return NextResponse.json(
+        { message: "An error occured creating the property" },
+        { status: 500 },
+      );
     }
-    return NextResponse.json(
-      { message: "An error occured creating the property" },
-      { status: 500 },
-    );
+  } else {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
 }
 
@@ -62,4 +63,9 @@ export async function DELETE(req: NextRequest) {
 function isAdmin() {
   const { sessionClaims } = auth();
   return !!sessionClaims?.isAdmin;
+}
+
+function canAddProperties() {
+  const { sessionClaims } = auth();
+  return !!sessionClaims?.canAddProperties;
 }

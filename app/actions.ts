@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import { db } from "@/lib/prisma";
 import { propertySchema, editPropertySchema } from "@/lib/validations";
+import { User } from "@clerk/nextjs/server";
 
 export async function getProperties() {
   return await db.property.findMany({
@@ -27,5 +28,23 @@ export async function deleteProperty(id: number) {
   return await fetch("/api/property", {
     method: "DELETE",
     body: JSON.stringify({ id }),
+  });
+}
+
+export async function getUsers(): Promise<User[]> {
+  const { users } = await fetch("/api/users").then((res) => res.json());
+  return users;
+}
+
+export async function updateUserPermissions({
+  userId,
+  canAddProperties,
+}: {
+  userId: string;
+  canAddProperties: boolean;
+}) {
+  await fetch("/api/users", {
+    method: "PATCH",
+    body: JSON.stringify({ userId, canAddProperties }),
   });
 }
