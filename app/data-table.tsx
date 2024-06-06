@@ -28,6 +28,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { getProperties } from "@/app/actions";
+import { Dialog } from "@/components/ui/dialog";
 
 interface Props<TValue> {
   columns: ColumnDef<Property, TValue>[];
@@ -106,10 +107,12 @@ export default function DataTable<TValue>({ columns, isAdmin }: Props<TValue>) {
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id} className="text-center">
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
+                      <Dialog>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </Dialog>
                     </TableCell>
                   ))}
                 </TableRow>
