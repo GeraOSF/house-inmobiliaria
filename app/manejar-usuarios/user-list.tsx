@@ -49,19 +49,24 @@ export default function UserList() {
                     {user.emailAddresses[0].emailAddress}
                   </span>
                 </div>
-                <div className="ml-auto flex items-center gap-2 pl-8">
-                  <Label htmlFor={`agregar-${user.id}`}>Agregar</Label>
-                  <Checkbox
-                    id={`agregar-${user.id}`}
-                    className="size-6 rounded-full"
-                    defaultChecked={!!user.publicMetadata.canAddProperties}
-                    onCheckedChange={(e) =>
-                      updatePermissions({
-                        userId: user.id,
-                        canAddProperties: !!e,
-                      })
-                    }
-                  />
+                <div className="ml-auto flex flex-col gap-2 pl-8">
+                  <span className="text-sm text-muted-foreground">
+                    Permisos:
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <Label htmlFor={`agregar-${user.id}`}>Agregar</Label>
+                    <Checkbox
+                      id={`agregar-${user.id}`}
+                      className="size-6 rounded-full"
+                      defaultChecked={!!user.publicMetadata.canAddProperties}
+                      onCheckedChange={(e) =>
+                        updatePermissions({
+                          userId: user.id,
+                          canAddProperties: !!e,
+                        })
+                      }
+                    />
+                  </div>
                 </div>
               </CardContent>
             </Card>
