@@ -130,7 +130,7 @@ export default function PropertyForm({
           imageKeys: keys,
           coordinates,
         });
-        if (revalidate) revalidate("/");
+        revalidate?.("/");
         router.push("/");
       } catch (error) {
         console.error(error);

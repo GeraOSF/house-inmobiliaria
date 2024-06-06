@@ -11,6 +11,7 @@
     "test": "playwright test",
     "test:ui": "playwright test --ui"
   },
+  "packageManager": "pnpm@9.2.0",
   "dependencies": {
     "@clerk/localizations": "^1.28.3",
     "@clerk/nextjs": "^4.30.0",
