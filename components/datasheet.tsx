@@ -34,14 +34,14 @@ export default function Datasheet({ property }: { property: Property }) {
     maximumFractionDigits: 0,
   }).format(property.price);
 
-  let coordinates;
+  let coordinatesString: string = "";
   if (
     typeof property.coordinates === "object" &&
     property.coordinates != null &&
     "lat" in property.coordinates &&
     "lng" in property.coordinates
   ) {
-    coordinates = `${property.coordinates.lat},${property.coordinates.lng}`;
+    coordinatesString = `${property.coordinates.lat},${property.coordinates.lng}`;
   }
 
   return (
@@ -154,7 +154,7 @@ export default function Datasheet({ property }: { property: Property }) {
             <View break>
               <Text style={{ fontFamily: "Helvetica-Bold" }}>Referencias:</Text>
               <Image
-                src={`https://maps.googleapis.com/maps/api/staticmap?center=${coordinates}&zoom=15&size=600x300&markers=color:red%7C${coordinates}&key=${API_KEY}`}
+                src={`https://maps.googleapis.com/maps/api/staticmap?center=${coordinatesString}&zoom=15&size=600x300&markers=color:red%7C${coordinatesString}&key=${API_KEY}`}
                 style={{ width: "80%", margin: "0 auto" }}
               />
             </View>

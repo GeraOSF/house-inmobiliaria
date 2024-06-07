@@ -6,6 +6,8 @@ import { ColumnDef, Column } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { translations } from "@/lib/constants";
 import TableDropDownMenu from "./table-dd-menu";
+import { DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import ImageCarousel from "@/components/image-carousel";
 
 export const columns: ColumnDef<Property>[] = [
   {
@@ -38,13 +40,20 @@ export const columns: ColumnDef<Property>[] = [
     cell: ({ row }) => {
       const images: string[] = row.getValue("images");
       return (
-        <picture>
-          <img
-            className="mx-auto h-40 w-40 rounded object-cover"
-            src={images[0]}
-            alt="Preview de la propiedad"
-          />
-        </picture>
+        <>
+          <DialogTrigger>
+            <picture>
+              <img
+                className="mx-auto h-40 w-40 rounded object-cover transition-transform hover:scale-105"
+                src={images[0]}
+                alt="Preview de la propiedad"
+              />
+            </picture>
+          </DialogTrigger>
+          <DialogContent className="border-none bg-transparent px-14">
+            <ImageCarousel images={images} />
+          </DialogContent>
+        </>
       );
     },
   },

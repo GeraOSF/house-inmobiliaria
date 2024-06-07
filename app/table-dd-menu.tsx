@@ -7,8 +7,6 @@ import { useMutation } from "@tanstack/react-query";
 import {
   MoreVertical,
   FileText,
-  Clipboard,
-  CopyCheck,
   Trash,
   Download,
   Pencil,
