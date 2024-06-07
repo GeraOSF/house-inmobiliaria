@@ -21,6 +21,7 @@ export default function Header() {
   const pathname = usePathname();
   const { user } = useUser();
   const isAdmin = !!user?.publicMetadata?.isAdmin;
+  const canAddProperties = !!user?.publicMetadata?.canAddProperties;
 
   return (
     <>
@@ -41,7 +42,7 @@ export default function Header() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              {isAdmin && (
+              {(isAdmin || canAddProperties) && (
                 <>
                   <DropdownMenuItem asChild>
                     <Link className={"cursor-pointer"} href="/manejar-usuarios">
