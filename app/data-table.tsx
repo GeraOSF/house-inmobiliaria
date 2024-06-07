@@ -33,9 +33,10 @@ import { Dialog } from "@/components/ui/dialog";
 interface Props<TValue> {
   columns: ColumnDef<Property, TValue>[];
   isAdmin: boolean;
+  canAddProperties: boolean;
 }
 
-export default function DataTable<TValue>({ columns, isAdmin }: Props<TValue>) {
+export default function DataTable<TValue>({ columns, isAdmin, canAddProperties }: Props<TValue>) {
   const { data } = useQuery({
     queryKey: ["properties"],
     queryFn: getProperties,
@@ -69,7 +70,7 @@ export default function DataTable<TValue>({ columns, isAdmin }: Props<TValue>) {
           }
           className="max-w-sm text-base"
         />
-        {isAdmin && (
+        {(isAdmin || canAddProperties) && (
           <Button className="w-fit self-start" asChild>
             <Link href="/agregar">
               <Plus className="h-7 w-7" />

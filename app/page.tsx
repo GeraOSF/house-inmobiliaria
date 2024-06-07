@@ -9,6 +9,7 @@ import DataTable from "@/app/data-table";
 export default async function Home() {
   const { sessionClaims } = auth();
   const isAdmin = !!sessionClaims?.isAdmin;
+  const canAddProperties = !!sessionClaims?.canAddProperties;
   const queryClient = getQueryClient();
   await queryClient.prefetchQuery({
     queryKey: ["properties"],
@@ -22,6 +23,7 @@ export default async function Home() {
         <DataTable
           columns={isAdmin ? adminColumns : columns}
           isAdmin={isAdmin}
+          canAddProperties={canAddProperties}
         />
       </HydrationBoundary>
     </main>

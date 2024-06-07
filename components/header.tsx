@@ -21,8 +21,7 @@ export default function Header() {
   const pathname = usePathname();
   const { user } = useUser();
   const isAdmin = !!user?.publicMetadata?.isAdmin;
-  const canAddProperties = !!user?.publicMetadata?.canAddProperties;
-
+  
   return (
     <>
       <header className="container flex items-start justify-between gap-2 p-2">
@@ -42,7 +41,7 @@ export default function Header() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              {(isAdmin || canAddProperties) && (
+              {isAdmin && (
                 <>
                   <DropdownMenuItem asChild>
                     <Link className={"cursor-pointer"} href="/manejar-usuarios">
