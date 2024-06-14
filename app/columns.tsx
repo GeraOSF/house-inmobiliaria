@@ -50,7 +50,7 @@ export const columns: ColumnDef<Property>[] = [
               />
             </picture>
           </DialogTrigger>
-          <DialogContent className="border-none bg-transparent px-14">
+          <DialogContent className="max-w-4xl border-none bg-transparent px-14">
             <ImageCarousel images={images} />
           </DialogContent>
         </>
