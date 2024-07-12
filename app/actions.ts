@@ -12,8 +12,7 @@ export async function getProperties() {
 }
 
 export async function createProperty(data: z.infer<typeof propertySchema>) {
-  if (!hasPermissions(["isAdmin", "canAddProperties"]))
-    throw new Error("Unauthorized");
+  if (!hasPermissions("canAddProperties")) throw new Error("Unauthorized");
   try {
     await db.property.create({ data });
     return;
@@ -26,7 +25,7 @@ export async function createProperty(data: z.infer<typeof propertySchema>) {
 }
 
 export async function editProperty(data: z.infer<typeof editPropertySchema>) {
-  if (!hasPermissions(["isAdmin"])) throw new Error("Unauthorized");
+  if (!hasPermissions("isAdmin")) throw new Error("Unauthorized");
   try {
     await db.property.update({ where: { id: data.id }, data });
     return;
@@ -36,7 +35,7 @@ export async function editProperty(data: z.infer<typeof editPropertySchema>) {
 }
 
 export async function deleteProperty(id: number) {
-  if (!hasPermissions(["isAdmin"])) throw new Error("Unauthorized");
+  if (!hasPermissions("isAdmin")) throw new Error("Unauthorized");
   try {
     const property = await db.property.findUnique({
       select: { imageKeys: true },
@@ -53,7 +52,7 @@ export async function deleteProperty(id: number) {
 }
 
 export async function getUsers(): Promise<User[] | undefined> {
-  if (!hasPermissions(["isAdmin"])) throw new Error("Unauthorized");
+  if (!hasPermissions("isAdmin")) throw new Error("Unauthorized");
   try {
     const users = await clerkClient.users.getUserList();
     return users;
@@ -69,7 +68,7 @@ export async function updateUserPermissions({
   userId: string;
   canAddProperties: boolean;
 }) {
-  if (!hasPermissions(["isAdmin"])) throw new Error("Unauthorized");
+  if (!hasPermissions("isAdmin")) throw new Error("Unauthorized");
   try {
     const user = await clerkClient.users.getUser(userId);
     if (!user) {
@@ -84,7 +83,15 @@ export async function updateUserPermissions({
   }
 }
 
-function hasPermissions(permissions: ("isAdmin" | "canAddProperties")[]) {
+type Permission = "isAdmin" | "canAddProperties";
+function hasPermissions(permission: Permission) {
   const { sessionClaims } = auth();
-  return permissions.every((permission) => sessionClaims?.[permission]);
+  const isAdmin = !!sessionClaims?.isAdmin;
+  const canAddProperties = !!sessionClaims?.canAddProperties;
+
+  if (isAdmin) return true;
+
+  if (permission === "canAddProperties" && canAddProperties) return true;
+
+  return false;
 }
