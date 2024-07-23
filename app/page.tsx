@@ -1,31 +1,25 @@
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { auth } from "@clerk/nextjs";
-
-import getQueryClient from "@/lib/query";
-import { getProperties } from "@/app/actions";
 import { columns, adminColumns } from "@/app/columns";
 import DataTable from "@/app/data-table";
+import { db } from "@/lib/prisma";
 
 export default async function Home() {
   const { sessionClaims } = auth();
   const isAdmin = !!sessionClaims?.isAdmin;
   const canAddProperties = !!sessionClaims?.canAddProperties;
-  const queryClient = getQueryClient();
-  await queryClient.prefetchQuery({
-    queryKey: ["properties"],
-    queryFn: getProperties,
+
+  const properties = await db.property.findMany({
+    orderBy: { id: "desc" },
   });
-  const dehydratedState = dehydrate(queryClient);
 
   return (
     <main className="container p-2">
-      <HydrationBoundary state={dehydratedState}>
-        <DataTable
-          columns={isAdmin ? adminColumns : columns}
-          isAdmin={isAdmin}
-          canAddProperties={canAddProperties}
-        />
-      </HydrationBoundary>
+      <DataTable
+        properties={properties}
+        columns={isAdmin ? adminColumns : columns}
+        isAdmin={isAdmin}
+        canAddProperties={canAddProperties}
+      />
     </main>
   );
 }

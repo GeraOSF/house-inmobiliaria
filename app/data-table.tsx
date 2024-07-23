@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-import { useQuery } from "@tanstack/react-query";
 import { type Property } from "@prisma/client";
 import { Plus } from "lucide-react";
 import {
@@ -27,25 +26,26 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { getProperties } from "@/app/actions";
 import { Dialog } from "@/components/ui/dialog";
 
 interface Props<TValue> {
+  properties: Property[];
   columns: ColumnDef<Property, TValue>[];
   isAdmin: boolean;
   canAddProperties: boolean;
 }
 
-export default function DataTable<TValue>({ columns, isAdmin, canAddProperties }: Props<TValue>) {
-  const { data } = useQuery({
-    queryKey: ["properties"],
-    queryFn: getProperties,
-  });
+export default function DataTable<TValue>({
+  properties,
+  columns,
+  isAdmin,
+  canAddProperties,
+}: Props<TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
   const table = useReactTable({
-    data: data ?? [],
+    data: properties,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
