@@ -1,19 +1,14 @@
 "use client";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 
-import { getUsers, updateUserPermissions } from "@/app/actions";
+import { updateUserPermissions } from "@/app/actions";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import Spinner from "@/components/spinner";
+import { type User } from "@clerk/nextjs/server";
 
-export default function UserList() {
-  const { data: users, isLoading: isLoadingUsers } = useQuery({
-    queryKey: ["users"],
-    queryFn: getUsers,
-  });
-
+export default function UserList({ users }: { users: User[] }) {
   const { mutate: updatePermissions } = useMutation({
     mutationKey: ["updatePermissions"],
     mutationFn: ({
@@ -72,7 +67,6 @@ export default function UserList() {
             </Card>
           </li>
         ))}
-      {isLoadingUsers && <Spinner />}
     </ul>
   );
 }

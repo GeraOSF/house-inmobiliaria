@@ -2,7 +2,7 @@
 import { z } from "zod";
 import { db } from "@/lib/prisma";
 import { propertySchema, editPropertySchema } from "@/lib/validations";
-import { auth, clerkClient, type User } from "@clerk/nextjs/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import { utapi } from "@/lib/uploadthing-server";
 
 export async function getProperties() {
@@ -46,16 +46,6 @@ export async function deleteProperty(id: number) {
     }
     await db.property.delete({ where: { id } });
     return;
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-export async function getUsers(): Promise<User[] | undefined> {
-  if (!hasPermissions("isAdmin")) throw new Error("Unauthorized");
-  try {
-    const users = await clerkClient.users.getUserList();
-    return users;
   } catch (error) {
     console.error(error);
   }
