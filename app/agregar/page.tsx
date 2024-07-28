@@ -1,5 +1,5 @@
 import { revalidatePath } from "next/cache";
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 
 import PropertyForm from "@/components/property-form";
 import { redirect } from "next/navigation";

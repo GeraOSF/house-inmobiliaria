@@ -35,16 +35,22 @@ export default function RootLayout({
       localization={esES}
       appearance={{
         elements: {
-          card: "bg-background shadow-none sm:shadow-lg sm:ring-2 sm:ring-primary -sm:p-2",
+          card: "bg-background border border-primary shadow-none sm:shadow-lg sm:ring-2 sm:ring-primary -sm:p-2",
+          cardBox: "rounded-lg",
           headerTitle: "text-foreground",
           headerSubtitle: "text-foreground/70 font-light",
-          socialButtonsBlockButton: buttonVariants({ variant: "outline" }),
+          socialButtonsBlockButton: buttonVariants({
+            variant: "outline",
+            className: "!border",
+          }),
           socialButtonsBlockButtonText: "text-foreground",
           dividerLine: "bg-muted",
           dividerText: "text-foreground/60",
           formFieldLabel: "text-foreground",
-          formFieldInput: "bg-background border border-input text-foreground",
-          footerActionText: "text-foreground/70",
+          formFieldInput: "bg-background !border !border-input text-foreground",
+          formFieldInputShowPasswordIcon: "text-muted-foreground",
+          footer:
+            "bg-gradient-to-b from-background to-background border border-secondary rounded-lg",
         },
         variables: {
           colorPrimary: "hsl(142.1 70.6% 45.3%)",

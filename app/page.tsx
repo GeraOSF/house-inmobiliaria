@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import { columns, adminColumns } from "@/app/columns";
 import DataTable from "@/app/data-table";
 import { db } from "@/lib/prisma";

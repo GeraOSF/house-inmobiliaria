@@ -7,7 +7,7 @@ export default async function Page() {
   const isAdmin = sessionClaims?.isAdmin;
   if (!isAdmin) redirect("/");
 
-  const users = await clerkClient.users.getUserList();
+  const { data: users } = await clerkClient.users.getUserList();
 
   return (
     <main className="container flex flex-col items-center p-2">
