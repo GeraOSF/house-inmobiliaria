@@ -387,6 +387,7 @@ export default function PropertyForm({
                 <FormControl>
                   <Input
                     {...field}
+                    value={field.value === null ? undefined : field.value}
                     onChange={(e) => field.onChange(+e.target.value)}
                     placeholder="Metros cuadrados"
                     type="number"
@@ -404,7 +405,11 @@ export default function PropertyForm({
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Select {...field} onValueChange={field.onChange}>
+                  <Select
+                    {...field}
+                    value={field.value === null ? undefined : field.value}
+                    onValueChange={field.onChange}
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Tipo de lavadero" />
                     </SelectTrigger>
@@ -433,7 +438,11 @@ export default function PropertyForm({
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Select {...field} onValueChange={field.onChange}>
+                  <Select
+                    {...field}
+                    value={field.value === null ? undefined : field.value}
+                    onValueChange={field.onChange}
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Tipo de estacionamiento" />
                     </SelectTrigger>
@@ -465,7 +474,11 @@ export default function PropertyForm({
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Select {...field} onValueChange={field.onChange}>
+                  <Select
+                    {...field}
+                    value={field.value === null ? undefined : field.value}
+                    onValueChange={field.onChange}
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Tipo de calefacción" />
                     </SelectTrigger>
@@ -501,6 +514,7 @@ export default function PropertyForm({
                 <FormControl>
                   <Textarea
                     {...field}
+                    value={field.value === null ? undefined : field.value}
                     placeholder="Notas privadas"
                     id={field.name}
                   />
