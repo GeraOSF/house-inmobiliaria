@@ -21,15 +21,15 @@ export const formSchema = z.object({
   description: z.string().min(1),
   commission: z.number().multipleOf(0.01).nonnegative(),
   acceptsCredit: z.boolean(),
-  area: z.number().multipleOf(0.01).positive().optional(),
-  washing: z.enum(["UNIT", "BUILDING", "AVAILABLE", "NONE"]).optional(),
+  area: z.number().multipleOf(0.01).positive().nullish(),
+  washing: z.enum(["UNIT", "BUILDING", "AVAILABLE", "NONE"]).nullish(),
   parking: z
     .enum(["COVERED", "PUBLIC", "PRIVATE", "AVAILABLE", "NONE"])
-    .optional(),
+    .nullish(),
   heating: z
     .enum(["CENTRAL", "ELECTRIC", "GAS", "RADIATORS", "AVAILABLE", "NONE"])
-    .optional(),
-  privateNotes: z.string().optional(),
+    .nullish(),
+  privateNotes: z.string().nullish(),
 });
 
 export const propertySchema = formSchema.extend({
