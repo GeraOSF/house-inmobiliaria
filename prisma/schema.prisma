@@ -34,6 +34,7 @@ enum Subtype {
   HOUSE
   APARTMENT
   LAND
+  OFFICE
 }
 
 enum Operation {

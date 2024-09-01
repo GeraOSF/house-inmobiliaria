@@ -13,7 +13,7 @@ z.setErrorMap(zodI18nMap);
 
 export const formSchema = z.object({
   operation: z.enum(["SALE", "RENT", "TRANSFER"]),
-  subtype: z.enum(["HOUSE", "APARTMENT", "LAND"]),
+  subtype: z.enum(["HOUSE", "APARTMENT", "LAND", "OFFICE"]),
   bedrooms: z.number().int().nonnegative(),
   bathrooms: z.number().nonnegative(),
   price: z.number().int().positive(),

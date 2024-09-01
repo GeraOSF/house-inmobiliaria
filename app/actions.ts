@@ -5,12 +5,6 @@ import { propertySchema, editPropertySchema } from "@/lib/validations";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { utapi } from "@/lib/uploadthing-server";
 
-export async function getProperties() {
-  return await db.property.findMany({
-    orderBy: { id: "desc" },
-  });
-}
-
 export async function createProperty(data: z.infer<typeof propertySchema>) {
   if (!hasPermissions("canAddProperties")) throw new Error("Unauthorized");
   try {

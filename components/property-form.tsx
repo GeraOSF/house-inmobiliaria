@@ -211,6 +211,7 @@ export default function PropertyForm({
                       <SelectItem value="HOUSE">Casa</SelectItem>
                       <SelectItem value="APARTMENT">Departamento</SelectItem>
                       <SelectItem value="LAND">Terreno</SelectItem>
+                      <SelectItem value="OFFICE">Consultorio</SelectItem>
                     </SelectContent>
                   </Select>
                 </FormControl>

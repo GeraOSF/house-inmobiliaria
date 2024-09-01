@@ -1,32 +1,8 @@
-// From prisma schema:
-// enum Washing {
-//   UNIT
-//   BUILDING
-//   AVAILABLE
-//   NONE
-// }
-
-// enum Parking {
-//   COVERED
-//   PUBLIC
-//   PRIVATE
-//   AVAILABLE
-//   NONE
-// }
-
-// enum Heating {
-//   CENTRAL
-//   ELECTRIC
-//   GAS
-//   RADIATORS
-//   AVAILABLE
-//   NONE
-// }
-
 export const translations = {
   HOUSE: "Casa",
   APARTMENT: "Departamento",
   LAND: "Terreno",
+  OFFICE: "Consultorio",
   SALE: "Venta",
   RENT: "Renta",
   TRANSFER: "Traspaso",
