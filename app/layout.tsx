@@ -11,6 +11,7 @@ import { ourFileRouter } from "@/app/api/uploadthing/core";
 import { Toaster } from "@/components/ui/toaster";
 import { buttonVariants } from "@/components/ui/button";
 import Header from "@/components/header";
+import DotPattern from "@/components/ui/dot-pattern";
 
 import "./globals.css";
 import "@uploadthing/react/styles.css";
@@ -64,6 +65,11 @@ export default function RootLayout({
             <Header />
             {children}
             <Toaster />
+            <DotPattern
+              width={30}
+              height={30}
+              className="-z-10 opacity-40 [mask-image:linear-gradient(to_bottom,white,transparent)]"
+            />
           </Providers>
         </body>
       </html>
